@@ -28,7 +28,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
 ::-webkit-scrollbar-thumb:hover{background:var(--t3)}
 
 /* ── TOPBAR ── */
-#top{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px;gap:8px;flex-shrink:0;-webkit-app-region:drag;z-index:50}
+#top{height:46px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 14px 0 80px;gap:8px;flex-shrink:0;-webkit-app-region:drag;z-index:50}
 .logo{font-weight:800;font-size:16px;display:flex;align-items:center;gap:7px;letter-spacing:-.5px;-webkit-app-region:no-drag}
 .logo-mark{width:28px;height:28px;background:linear-gradient(135deg,var(--icm1),var(--icm4));border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;color:#000}
 .logo-ver{font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;align-self:flex-end;margin-bottom:3px;margin-left:1px}
@@ -67,8 +67,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
 .kbd{padding:1px 4px;border-radius:3px;background:var(--s3);color:var(--t3);font-size:9px;font-family:var(--mono)}
 
 /* ── MODAL ── */
-.overlay{position:fixed;inset:0;background:#00000090;backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
-.overlay.open{opacity:1;pointer-events:all}
+.overlay{position:fixed;inset:0;background:#00000090;backdrop-filter:blur(4px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;visibility:hidden}
+.overlay.open{opacity:1;pointer-events:all;visibility:visible}
 .modal{background:var(--s2);border:1px solid var(--b2);border-radius:12px;padding:26px;width:480px;box-shadow:0 24px 80px #0008;transform:translateY(12px);transition:transform .25s}
 .overlay.open .modal{transform:none}
 .modal h2{font-size:17px;font-weight:800;margin-bottom:4px}
@@ -233,6 +233,131 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
 .t-err{background:#3a1a1a;border:1px solid var(--err);color:var(--err)}
 .t-inf{background:var(--s3);border:1px solid var(--b2);color:var(--a1)}
 @keyframes tsi{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+
+/* ── MULTI-TABS ── */
+#tabs{display:flex;align-items:center;background:var(--s1);border-bottom:1px solid var(--b1);height:34px;flex-shrink:0;overflow-x:auto;padding:0 6px;gap:1px}
+.qtab{padding:4px 11px;font-size:11px;cursor:pointer;color:var(--t2);border-bottom:2px solid transparent;white-space:nowrap;display:flex;align-items:center;gap:5px;border-radius:4px 4px 0 0;user-select:none;transition:all .1s}
+.qtab:hover{color:var(--t1)}
+.qtab.active{color:var(--a1);border-bottom-color:var(--a1);background:var(--s3)66}
+.qtab-x{color:var(--t3);font-size:12px;padding:1px 2px;line-height:1}
+.qtab-x:hover{color:var(--err)}
+.qtab-add{padding:3px 8px;color:var(--t3);cursor:pointer;font-size:18px;line-height:1}
+.qtab-add:hover{color:var(--a1)}
+
+/* ── TBAR EXTRAS ── */
+.tbar-sep{width:1px;height:18px;background:var(--b2);flex-shrink:0}
+.tbar-btn{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:5px;border:none;cursor:pointer;font-family:var(--ui);font-size:10px;font-weight:600;background:transparent;color:var(--t2);transition:all .12s;white-space:nowrap}
+.tbar-btn:hover{color:var(--t1);background:var(--s3)}
+.tbar-btn:disabled{opacity:.3;pointer-events:none}
+
+/* ── ROW DETAIL DRAWER ── */
+.rd-overlay{position:fixed;inset:0;background:#00000070;z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .2s;visibility:hidden}
+.rd-overlay.open{opacity:1;pointer-events:all;visibility:visible}
+.rd-panel{width:100%;max-height:70vh;background:var(--s2);border-top:1px solid var(--b2);border-radius:12px 12px 0 0;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .25s cubic-bezier(.34,1.2,.64,1)}
+.rd-overlay.open .rd-panel{transform:none}
+.rd-hd{padding:12px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.rd-title{font-weight:800;font-size:14px}
+.rd-sub{font-size:11px;color:var(--t2);margin-top:1px}
+.rd-body{overflow-y:auto;flex:1;padding:16px 20px}
+.rd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.rd-field{background:var(--s3);border-radius:7px;padding:10px 14px}
+.rd-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);margin-bottom:4px}
+.rd-value{font-family:var(--mono);font-size:12px;color:var(--t1);word-break:break-all;line-height:1.5}
+
+/* ── SCHEMA COL DETAIL ── */
+.schema-panel{background:var(--s2);border-top:1px solid var(--b1);display:none;flex-direction:column;max-height:180px;flex-shrink:0}
+.schema-panel.open{display:flex}
+.schema-hd{padding:5px 10px;font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t3);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--b1);flex-shrink:0}
+.schema-scroll{overflow-y:auto;flex:1}
+.col-row{padding:4px 10px;display:grid;grid-template-columns:1fr auto;gap:4px;border-bottom:1px solid var(--b1)33;cursor:pointer}
+.col-row:hover{background:var(--s3)}
+.col-nm{font-family:var(--mono);font-size:11px;color:var(--t1);display:flex;align-items:center;gap:4px}
+.col-tp{font-family:var(--mono);font-size:9px;color:var(--a4);white-space:nowrap}
+.col-ds{font-size:9px;color:var(--t3);grid-column:1/-1;margin-top:1px;line-height:1.4}
+.cbadge{padding:1px 4px;border-radius:3px;font-size:8px;font-weight:700}
+.cb-pk{background:var(--a1)22;color:var(--a1)}
+.cb-fk{background:var(--a4)22;color:var(--a4)}
+
+/* ── EXPLAIN PANEL ── */
+.explain-out{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;font-family:var(--mono);font-size:11px;color:var(--a3);line-height:1.7;white-space:pre-wrap;margin-top:12px;max-height:300px;overflow-y:auto}
+
+/* ── HISTORY ── */
+.hist-list{flex-shrink:0;max-height:120px;overflow-y:auto;border-top:1px solid var(--b1)}
+.hist-row{padding:5px 12px;font-size:10px;color:var(--t2);cursor:pointer;display:flex;align-items:center;gap:6px;border-bottom:1px solid var(--b1)33}
+.hist-row:hover{background:var(--s3)}
+.hist-nm{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-weight:600;font-family:var(--mono)}
+.hist-ts{font-size:9px;color:var(--t3);white-space:nowrap}
+.hist-del{color:var(--err);opacity:0;font-size:12px;padding:0 2px;cursor:pointer;line-height:1}
+.hist-row:hover .hist-del{opacity:.6}
+.sb-sec-hd{padding:5px 12px 3px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);border-top:1px solid var(--b1);margin-top:4px}
+
+
+/* ── INTERACTIVE DASHBOARD ADDITIONS ── */
+.dash-period-bar{display:flex;align-items:center;gap:8px;padding:10px 20px;background:var(--s1);border-bottom:1px solid var(--b1);flex-shrink:0;flex-wrap:wrap;}
+.period-btn{padding:4px 12px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--b2);color:var(--t3);transition:all .12s;}
+.period-btn:hover{color:var(--t2);}
+.period-btn.on{background:var(--a1)22;border-color:var(--a1);color:var(--a1);}
+.export-btn{padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--b2);color:var(--t3);background:transparent;margin-left:auto;transition:all .12s;}
+.export-btn:hover{border-color:var(--a3);color:var(--a3);}
+
+/* KPI card interactive */
+.kc{cursor:pointer;transition:transform .15s,box-shadow .15s;}
+.kc:hover{transform:translateY(-2px);box-shadow:0 8px 24px #0004;}
+.kc.selected{box-shadow:0 0 0 2px var(--kc);}
+@keyframes countUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kc-val{animation:countUp .5s ease both;}
+
+/* SVG charts */
+.chart-wrap{position:relative;width:100%;}
+.chart-wrap svg{width:100%;display:block;}
+.chart-tooltip{position:absolute;background:var(--s3);border:1px solid var(--b2);border-radius:6px;padding:6px 10px;font-size:11px;color:var(--t1);pointer-events:none;white-space:nowrap;z-index:10;display:none;}
+
+/* Tables interactive */
+.dtbl th{cursor:pointer;user-select:none;}
+.dtbl th:hover{color:var(--a1);}
+.dtbl th.sort-asc::after{content:' ↑';color:var(--a1);}
+.dtbl th.sort-desc::after{content:' ↓';color:var(--a1);}
+.tbl-search-row{padding:8px 15px;display:flex;align-items:center;gap:8px;}
+.tbl-search-inp{flex:1;background:var(--s3);border:1px solid var(--b1);border-radius:5px;padding:5px 10px;font-size:11px;color:var(--t1);outline:none;font-family:var(--mono);}
+.tbl-search-inp:focus{border-color:var(--a1);}
+
+/* Drill panel */
+.drill-panel{background:var(--s2);border:1px solid var(--b1);border-radius:8px;margin-top:10px;overflow:hidden;display:none;}
+.drill-panel.open{display:block;}
+.drill-hd{padding:10px 15px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.drill-title{font-size:12px;font-weight:700;color:var(--a1);}
+
+/* Attainment ring */
+.ring-wrap{position:relative;display:inline-block;}
+.ring-wrap svg{display:block;}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-pct{font-size:22px;font-weight:800;font-family:var(--mono);}
+.ring-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;}
+
+/* Sparkline */
+.spark{display:inline-block;vertical-align:middle;}
+
+/* AI Agent dashboard */
+.agent-wrap{display:flex;flex-direction:column;height:100%;}
+.agent-msgs{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:12px;}
+.agent-msg{display:flex;gap:10px;align-items:flex-start;}
+.agent-msg.user{flex-direction:row-reverse;}
+.agent-bubble{max-width:75%;padding:10px 14px;border-radius:10px;font-size:12px;line-height:1.6;}
+.agent-msg.user .agent-bubble{background:var(--a1)22;border:1px solid var(--a1)44;color:var(--t1);border-radius:10px 2px 10px 10px;}
+.agent-msg.ai .agent-bubble{background:var(--s2);border:1px solid var(--b1);color:var(--t1);border-radius:2px 10px 10px 10px;}
+.agent-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px;}
+.agent-msg.user .agent-avatar{background:var(--a1)33;}
+.agent-msg.ai .agent-avatar{background:var(--a5)33;}
+.agent-input-row{padding:12px 20px;border-top:1px solid var(--b1);display:flex;gap:8px;flex-shrink:0;}
+.agent-inp{flex:1;background:var(--s3);border:1px solid var(--b1);border-radius:8px;padding:9px 14px;font-size:13px;color:var(--t1);outline:none;font-family:var(--ui);}
+.agent-inp:focus{border-color:var(--a5);}
+.agent-inp::placeholder{color:var(--t3);}
+.agent-send{background:linear-gradient(135deg,var(--a5),var(--a1));border:none;color:#fff;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;}
+.agent-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 20px 10px;}
+.agent-chip{padding:4px 12px;border-radius:12px;font-size:11px;cursor:pointer;background:var(--s3);border:1px solid var(--b2);color:var(--t3);transition:all .12s;}
+.agent-chip:hover{border-color:var(--a5);color:var(--a5);}
+.agent-chart-embed{margin-top:10px;background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:14px;overflow-x:auto;}
+
 </style>
 </head>
 <body>
@@ -274,23 +399,46 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
         <div class="sb-hd">Oracle ICM Schema</div>
         <div class="tbl-search"><input id="tblSearchInp" placeholder="🔍 filter tables…" oninput="filterTbls(this.value)"></div>
         <div class="tbl-list" id="tblList"></div>
+        <!-- Schema column detail panel -->
+        <div class="schema-panel" id="schemaPanel">
+          <div class="schema-hd">
+            <span id="schemaTblName">Columns</span>
+            <span style="cursor:pointer;color:var(--t3)" onclick="closeSchema()">✕</span>
+          </div>
+          <div class="schema-scroll" id="schemaCols"></div>
+        </div>
+        <!-- Query history -->
+        <div class="sb-sec-hd">Recent Queries</div>
+        <div class="hist-list" id="histList"></div>
       </div>
     </div>
     <div class="main">
       <div id="nlpBar">
         <span class="nlp-tag">✦ AI</span>
-        <input class="nlp-inp" id="nlpInp" placeholder="Ask in plain English — e.g. top 10 earners this quarter with their comp plan…" onkeydown="if(e.key==='Enter')nlpRun()">
+        <input class="nlp-inp" id="nlpInp" placeholder="Ask in plain English — e.g. top 10 earners this quarter with their comp plan…" onkeydown="if(event.key==='Enter')nlpRun()">
         <div class="spin" id="nlpSpin"></div>
+      </div>
+      <!-- Multi-tab bar -->
+      <div id="tabs">
+        <div class="qtab active" id="tab-0" onclick="switchTab(0)">
+          <span id="tab-label-0">Query 1</span>
+          <span class="qtab-x" onclick="event.stopPropagation();closeTab(0)">✕</span>
+        </div>
+        <div class="qtab-add" onclick="addTab()" title="New tab">+</div>
       </div>
       <div id="tbar">
         <button class="btn b-run" onclick="runSQL()">▶ Run <span class="kbd">⌘↵</span></button>
-        <button class="btn b-ghost" onclick="clearSQL()">✕ Clear</button>
-        <div style="width:1px;height:18px;background:var(--b2);"></div>
+        <button class="tbar-btn" onclick="formatSQL()" title="Format SQL (Shift+Alt+F)">⟳ Format</button>
+        <button class="tbar-btn" onclick="explainSQL()" id="btnExplain" disabled>⚡ Explain</button>
+        <div class="tbar-sep"></div>
+        <button class="tbar-btn" onclick="clearSQL()">✕ Clear</button>
         <select class="lim-sel" id="rowLim"><option>100</option><option selected>500</option><option>1000</option></select>
         <span style="font-size:10px;color:var(--t3)">rows</span>
-        <div style="width:1px;height:18px;background:var(--b2);"></div>
-        <button class="btn b-ghost btn-xs" onclick="exportResults('csv')" id="btnCsv" style="font-size:10px;padding:3px 9px;" disabled>↓ CSV</button>
-        <button class="btn b-ghost btn-xs" onclick="exportResults('json')" id="btnJson" style="font-size:10px;padding:3px 9px;" disabled>↓ JSON</button>
+        <div class="tbar-sep"></div>
+        <button class="tbar-btn" onclick="exportResults('csv')" id="btnCsv" disabled>↓ CSV</button>
+        <button class="tbar-btn" onclick="exportResults('json')" id="btnJson" disabled>↓ JSON</button>
+        <button class="tbar-btn" onclick="exportResults('excel')" id="btnXls" disabled>↓ Excel</button>
+        <div class="tbar-sep"></div>
         <span class="res-stat-top" id="resStat"></span>
       </div>
       <div class="prog" id="prog"></div>
@@ -352,6 +500,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
       <div class="dn-item"    onclick="switchDash('approvals',this)">✅ Approvals</div>
       <div class="dn-item"    onclick="switchDash('anomalies',this)">⚠️ Anomalies</div>
       <div class="dn-item"    onclick="switchDash('calendar',this)">📅 Calendar</div>
+      <div style="height:1px;background:var(--b1);margin:6px 12px;"></div>
+      <div class="dn-item" style="color:var(--a5)!important" onclick="switchDash('agent',this)">✦ AI Agent</div>
     </div>
     <div class="dash-content">
       <div id="dv-overview"  class="dv on"></div>
@@ -361,6 +511,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
       <div id="dv-approvals" class="dv"></div>
       <div id="dv-anomalies" class="dv"></div>
       <div id="dv-calendar"  class="dv"></div>
+      <div id="dv-agent"     class="dv"></div>
     </div>
   </div>
 </div>
@@ -382,6 +533,23 @@ body{background:var(--bg);color:var(--t1);font-family:var(--ui);font-size:13px;d
       <button class="btn b-ghost" onclick="disconnect()">Disconnect</button>
       <button class="btn b-out" id="testBtn" onclick="testConn()">Test Connection</button>
       <button class="btn b-blue" onclick="connect()">Connect</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ROW DETAIL DRAWER -->
+<div class="rd-overlay" id="rdOverlay" onclick="if(event.target===this)closeRowDetail()">
+  <div class="rd-panel">
+    <div class="rd-hd">
+      <div>
+        <div class="rd-title" id="rdTitle">Row Detail</div>
+        <div class="rd-sub" id="rdSub"></div>
+      </div>
+      <button class="btn b-ghost" onclick="closeRowDetail()" style="padding:4px 10px">✕ Close</button>
+    </div>
+    <div class="rd-body">
+      <div class="rd-grid" id="rdGrid"></div>
     </div>
   </div>
 </div>
@@ -538,6 +706,8 @@ function buildTbls(){
         document.querySelectorAll('.tbl-row').forEach(r=>r.classList.remove('on'));
         row.classList.add('on');
         document.getElementById('sqled').value=`SELECT *\nFROM fusion.${t}\nWHERE rownum <= 100`;
+        updateLnums();
+        openSchema(t);
       };
       list.appendChild(row);
     });
@@ -906,18 +1076,8 @@ function copyLib(){
 // ══════════════════════════════════════════════════════
 // P3: DASHBOARDS
 // ══════════════════════════════════════════════════════
-function switchDash(name,el){
-  document.querySelectorAll('.dn-item').forEach(i=>i.classList.remove('on'));
-  el.classList.add('on');
-  document.querySelectorAll('.dv').forEach(v=>v.classList.remove('on'));
-  const dv=document.getElementById('dv-'+name);
-  dv.classList.add('on');
-  if(!dv.innerHTML.trim())renderDash(name);
-}
-function renderDash(name){
-  const fns={overview:renderOverview,seller:renderSeller,plans:renderPlans,earnings:renderEarnings,approvals:renderApprovals,anomalies:renderAnomalies,calendar:renderCalendar};
-  if(fns[name])fns[name]();
-}
+
+
 
 const isLive=()=>ST.conn;
 const liveTag=()=>isLive()?'<span class="live-tag">LIVE</span>':'<span class="demo-tag">DEMO</span>';
@@ -932,230 +1092,25 @@ function br2(lbl,val,max,col='var(--purple)'){
 }
 function pill(t,c){return`<span class="bp bp-${c}">${t}</span>`;}
 
-function renderOverview(){
-  document.getElementById('dv-overview').innerHTML=`
-    <div class="dhd"><h2>🏠 ICM Executive Overview</h2>
-      <div class="dhd-r">
-        <select class="psel"><option>March 2026</option><option>Q1 2026</option></select>
-        <button class="ref-btn" onclick="renderOverview()">↻ Refresh</button>
-        ${liveTag()}
-      </div>
-    </div>
-    <div class="g4">
-      ${kc('Active Participants','2,847','Across all comp plans','↑ +142 vs last period',true)}
-      ${kc('Total OTV','$48.3M','On-Target Variable compensation','↑ +6.2% YoY',true)}
-      ${kc('Commission Earned','$12.7M','Calculated · Pending payout','↓ -2.1% vs target',false)}
-      ${kc('Pending Approvals','183','Comp letters awaiting sign-off','↓ -34 from last week',true)}
-    </div>
-    <div class="g2">
-      <div class="dc">
-        <div class="dchd"><span class="dctitle">📊 Earnings by Comp Plan</span></div>
-        <div class="dcbody">
-          ${br2('IC Simple Per Event 2017',4820000,4820000,'var(--a1)')}
-          ${br2('McAfee EMEA Accelerator',3640000,4820000,'var(--a2)')}
-          ${br2('McAfee APJ Standard',2980000,4820000,'var(--a3)')}
-          ${br2('McAfee Americas Q4',2280000,4820000,'var(--warn)')}
-          ${br2('McAfee Channel Partner',1620000,4820000,'var(--t4)')}
-        </div>
-      </div>
-      <div class="dc">
-        <div class="dchd"><span class="dctitle">🌐 Business Units</span></div>
-        <div class="dcbody">
-          <table class="dtbl">
-            <thead><tr><th>BU ID</th><th>Name</th><th>Status</th></tr></thead>
-            <tbody>
-              <tr><td>300000001870282</td><td>McAfee Enterprise LE BU</td><td>${pill('Active','g')}</td></tr>
-              <tr><td>300000002594180</td><td>McAfee BU</td><td>${pill('Active','g')}</td></tr>
-              <tr><td>300000002781680</td><td>McAfee Corp BU</td><td>${pill('Review','w')}</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div class="dc">
-      <div class="dchd"><span class="dctitle">🔄 ICM End-to-End Pipeline</span></div>
-      <div class="dcbody" style="display:flex;gap:4px;">
-        ${[['CX Sales','Opportunity Close','ok','✓'],['AR/ERP','Invoice & Revenue','ok','✓'],['ICM Credits','Transaction Credit','ok','✓'],['ICM Calculate','Earnings Calc','warn','●'],['BPM Approve','Comp Letter','t4','○'],['Payroll','Commission Payout','t4','○']].map(([t,s,c,ic])=>
-          `<div style="flex:1;text-align:center;padding:12px 6px;background:${c==='ok'?'rgba(102,187,106,.12)':c==='warn'?'rgba(245,124,0,.12)':'var(--s2)'};border-radius:5px;">
-            <div style="font-size:11px;font-weight:700;color:var(--${c})">${t}</div>
-            <div style="font-size:10px;color:var(--t3);margin-top:3px">${s}</div>
-            <div style="margin-top:4px;color:var(--${c})">${ic}</div>
-          </div>`).join('')}
-      </div>
-    </div>`;
-}
 
-function renderSeller(){
-  document.getElementById('dv-seller').innerHTML=`
-    <div class="dhd">
-      <div><h2>👤 Seller Dashboard</h2>
-        <div style="font-size:12px;color:var(--t3);margin-top:2px">Lisa Chen · Senior AE · McAfee Enterprise LE BU</div>
-      </div>
-      <div class="dhd-r"><select class="psel"><option>Q1 2026</option><option>Q4 2025</option></select>
-        <button class="ref-btn">↻ Refresh</button></div>
-    </div>
-    <div class="g4">
-      ${kc('Quota Attainment','92.0%','Of $5.9M target','↑ +4.2% vs last quarter',true)}
-      ${kc('YTD Commission','$26,256','Of $100K OTE','21.7% of annual target',undefined)}
-      ${kc('Active Credits','$3,443,000','This quarter','↑ +12 new credits',true)}
-      ${kc('Open Dispute','$3,840','DSP-2603-001 · Escalated','⚠ Action needed',false)}
-    </div>
-    <div class="g2">
-      <div class="dc">
-        <div class="dchd"><span class="dctitle">📈 Attainment to Goal</span></div>
-        <div class="dcbody">
-          ${[['Revenue Target','$5,441,000',78,'var(--ok)'],['Quota Attainment','92.0%',92,'var(--warn)'],['Commission Earned','$26,256',26,'var(--purple)']].map(([l,v,p,c])=>`
-            <div style="margin-bottom:12px;">
-              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
-                <span style="color:var(--t3)">${l}</span><span style="color:var(--t1);font-weight:600">${v}</span>
-              </div>
-              <div class="pt"><div class="pf2" style="width:${p}%;background:${c}"></div></div>
-            </div>`).join('')}
-          <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:6px;font-size:11px;color:var(--t3)">
-            💡 <strong style="color:var(--a1)">3% more</strong> to Tier 4 (11% rate). Close <strong style="color:var(--t1)">$45K</strong> more in sales.
-          </div>
-        </div>
-      </div>
-      <div class="dc">
-        <div class="dchd"><span class="dctitle">💰 Credits by Product</span></div>
-        <div class="dcbody">
-          ${br2('Corporate Travel',1562000,1562000,'var(--a1)')}
-          ${br2('Digital Channel',960000,1562000,'var(--a2)')}
-          ${br2('Leisure Travel',667000,1562000,'var(--a3)')}
-          ${br2('Loyalty Program',254000,1562000,'var(--t4)')}
-          <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:6px;">
-            <div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:600">⚡ What-If Calculator</div>
-            <div style="display:flex;gap:8px;align-items:center;font-size:12px;">
-              <label style="color:var(--t3)">Deal $</label>
-              <input id="dealAmt" type="number" value="500000" style="background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:4px 8px;color:var(--t1);width:110px;">
-              <span id="commResult" style="color:var(--ok);font-weight:800;font-size:15px;">$45,000</span>
-            </div>
-            <div id="commRate" style="font-size:10px;color:var(--t3);margin-top:4px;">at 9.0% rate (Tier 3)</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  document.getElementById('dealAmt').oninput=function(){
-    const deal=parseFloat(this.value)||0,attain=92;
-    let rate=0.07,tier='Tier 1';
-    if(attain>=95){rate=0.11;tier='Tier 4';}else if(attain>=90){rate=0.09;tier='Tier 3';}else if(attain>=80){rate=0.08;tier='Tier 2';}
-    document.getElementById('commResult').textContent='$'+Math.round(deal*rate).toLocaleString();
-    document.getElementById('commRate').textContent=`at ${(rate*100).toFixed(1)}% rate (${tier})`;
-  };
-}
 
-function renderPlans(){
-  document.getElementById('dv-plans').innerHTML=`
-    <div class="dhd"><h2>📋 Compensation Plans</h2>
-      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button>${liveTag()}</div>
-    </div>
-    <div class="dc"><div class="dchd"><span class="dctitle">Active Plans</span></div>
-      <div class="dcbody"><table class="dtbl">
-        <thead><tr><th>Plan Name</th><th>Display Name</th><th>Participants</th><th>Total OTV</th><th>Status</th></tr></thead>
-        <tbody>
-          ${[['IC Simple Per Event 2017','IC Simple - Enterprise',842,'$24.8M','g'],['McAfee EMEA Accelerator','EMEA Accelerator',634,'$18.6M','g'],['McAfee APJ Standard','APJ Standard',521,'$14.2M','g'],['McAfee Americas Q4','Americas Q4 Plan',398,'$9.8M','g'],['McAfee Channel Partner','Channel Partner',283,'$6.3M','e']].map(([n,d,p,o,s])=>
-            `<tr><td style="color:var(--t1);font-weight:600">${n}</td><td>${d}</td><td>${p}</td><td>${o}</td><td>${pill(s==='g'?'Active':'Inactive',s)}</td></tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
 
-function renderEarnings(){
-  document.getElementById('dv-earnings').innerHTML=`
-    <div class="dhd"><h2>💰 Commission Earnings</h2>
-      <div class="dhd-r"><select class="psel"><option>Period 2019001</option><option>Period 2019002</option></select>
-        <button class="ref-btn">↻ Refresh</button></div>
-    </div>
-    <div class="g4">
-      ${kc('Total Calculated','$12.7M','All participants',undefined,undefined)}
-      ${kc('Avg Per Participant','$4,462','2,847 participants',undefined,undefined)}
-      ${kc('Highest Earner','$89,400','John D. · EMEA Accelerator',undefined,undefined)}
-      ${kc('Below Target','27','Flagged for review','⚠ Action needed',false)}
-    </div>
-    <div class="dc"><div class="dchd"><span class="dctitle">Top Earners</span></div>
-      <div class="dcbody"><table class="dtbl">
-        <thead><tr><th>#</th><th>Participant</th><th>Plan</th><th>Credits</th><th>Commission</th><th>Attainment</th><th>Status</th></tr></thead>
-        <tbody>
-          ${[['1','John D.','IC Simple Per Event','$892K','$89,400','112%','g'],['2','Sarah C.','EMEA Accelerator','$743K','$74,300','98%','g'],['3','Mike R.','Americas Q4','$681K','$68,100','95%','g'],['4','Ana L.','APJ Standard','$592K','$59,200','84%','w'],['5','David K.','IC Simple Per Event','$534K','$53,400','78%','w']].map(([n,p,pl,cr,cm,at,t])=>
-            `<tr><td style="color:var(--t4)">${n}</td><td style="color:var(--t1);font-weight:600">${p}</td><td>${pl}</td><td>${cr}</td><td style="color:var(--ok);font-weight:600">${cm}</td><td>${pill(at,t)}</td><td>${pill('CALC','b')}</td></tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
 
-function renderApprovals(){
-  document.getElementById('dv-approvals').innerHTML=`
-    <div class="dhd"><h2>✅ Approval Pipeline</h2>
-      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button>${liveTag()}</div>
-    </div>
-    <div class="g4">
-      ${kc('Total Pending','183','Comp letters',undefined,undefined)}
-      ${kc('Approved Today','44','','↑ vs yesterday',true)}
-      ${kc('Escalated','12','Require action','⚠ Urgent',false)}
-      ${kc('Avg Wait','3.2 days','Time in approval',undefined,undefined)}
-    </div>
-    <div class="dc"><div class="dchd"><span class="dctitle">BPM Approval Tasks</span></div>
-      <div class="dcbody"><table class="dtbl">
-        <thead><tr><th>Participant</th><th>Plan</th><th>Task #</th><th>Status</th><th>Assignee</th><th>Days Open</th></tr></thead>
-        <tbody>
-          ${[['John Smith','IC Simple Per Event','TSK-20391','ASSIGNED','mgr@mcafee.com','2','b'],['Sarah Chen','EMEA Accelerator','TSK-20388','ESCALATED','vp@mcafee.com','8','e'],['Mike Johnson','Americas Q4','TSK-20385','ASSIGNED','mgr2@mcafee.com','1','b'],['Ana Lopez','APJ Standard','TSK-20380','COMPLETED','mgr3@mcafee.com','4','g']].map(([p,pl,t,s,a,d,c])=>
-            `<tr><td style="color:var(--t1);font-weight:600">${p}</td><td>${pl}</td><td style="color:var(--a2)">${t}</td><td>${pill(s,c)}</td><td>${a}</td><td style="color:${parseInt(d)>5?'var(--err)':'var(--t2)'}">${d}d</td></tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
 
-function renderAnomalies(){
-  document.getElementById('dv-anomalies').innerHTML=`
-    <div class="dhd"><h2>⚠️ Anomaly Detection</h2>
-      <div class="dhd-r"><button class="ref-btn" onclick="renderAnomalies()">↻ Scan</button></div>
-    </div>
-    <div class="ac e"><div class="ac-icon">🔴</div>
-      <div><div class="ac-title">Duplicate Credit Detected</div>
-        <div class="ac-text">Participant 21013 (John Smith) has 2 credits for TRX-8834-201 · Total: $35,960 · Plan: IC Simple Per Event 2017</div></div>
-    </div>
-    <div class="ac w"><div class="ac-icon">🟡</div>
-      <div><div class="ac-title">Outlier Earner — 3.2x Average</div>
-        <div class="ac-text">Participant 21019 earnings of $89,400 is 3.2x the plan average of $27,900. Period 2019001. Review credit assignment.</div></div>
-    </div>
-    <div class="ac w"><div class="ac-icon">🟡</div>
-      <div><div class="ac-title">Missing Plan Assignment — 3 Participants</div>
-        <div class="ac-text">Participants 21045, 21046, 21047 have no active comp plan for the current period. They will receive $0 commission.</div></div>
-    </div>
-    <div class="ac i"><div class="ac-icon">🔵</div>
-      <div><div class="ac-title">FX Rate Gap — EUR Conversion</div>
-        <div class="ac-text">No EUR conversion rate for period 2019-04-01 to 2019-04-30 in "Incentive Compensation Annual Rate". 48 participants affected.</div></div>
-    </div>`;
-}
 
-function renderCalendar(){
-  document.getElementById('dv-calendar').innerHTML=`
-    <div class="dhd"><h2>📅 Calendar & Periods</h2>
-      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button></div>
-    </div>
-    <div class="dc"><div class="dchd"><span class="dctitle">McAfee 445 Monthly Calendar · FY2019</span></div>
-      <div class="dcbody"><table class="dtbl">
-        <thead><tr><th>Period Name</th><th>Period #</th><th>Start Date</th><th>End Date</th><th>Type</th><th>Status</th></tr></thead>
-        <tbody>
-          ${[['2019-01',1,'01-Jan-2019','31-Jan-2019','Monthly','Closed','b'],['2019-02',2,'01-Feb-2019','28-Feb-2019','Monthly','Closed','b'],['2019-03',3,'01-Mar-2019','31-Mar-2019','Monthly','Closed','b'],['2019-04',4,'01-Apr-2019','30-Apr-2019','Monthly','Open','g'],['2019-05',5,'01-May-2019','31-May-2019','Monthly','Future','e']].map(([n,num,s,e,t,st,c])=>
-            `<tr><td style="color:var(--t1);font-weight:600">${n}</td><td>${num}</td><td>${s}</td><td>${e}</td><td>${t}</td><td>${pill(st,c)}</td></tr>`).join('')}
-        </tbody>
-      </table></div>
-    </div>`;
-}
+
+
+
+
+
+
+
 
 // ══════════════════════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════════════════
-buildTbls();
-buildLib();
-renderOverview();
-initConn();
 document.addEventListener('keydown',e=>{
-  if((e.metaKey||e.ctrlKey)&&e.key==='Enter')runSQL();
+  if((e.metaKey||e.ctrlKey)&&e.key==='Enter')window.runSQL();
 });
-
-
 // ── DRAG RESIZE ─────────────────────────────────────────────────────────
 (function(){
   const dragger = document.getElementById('dragger');
@@ -1377,8 +1332,1314 @@ document.addEventListener('keydown', e=>{
   if((e.metaKey||e.ctrlKey) && e.key==='Enter') window.runSQL();
 });
 
-// ── INIT ────────────────────────────────────────────────────────────────
-buildTbls(); buildLib(); renderOverview(); initConn(); updateLnums();
+// ── INTERACTIVE DASHBOARDS ──
+
+// ════════════════════════════════════════════════════════════════════════════
+// INTERACTIVE DASHBOARD ENGINE
+// ════════════════════════════════════════════════════════════════════════════
+
+// ── GLOBAL STATE ────────────────────────────────────────────────────────────
+const DS = {
+  period: 'Q1 2026',
+  periods: ['Jan 2026','Feb 2026','Mar 2026','Q1 2026','Q4 2025','FY 2025'],
+  selectedKPI: null,
+  agentHistory: [],
+};
+
+// ── SVG CHART HELPERS ────────────────────────────────────────────────────────
+function svgBar(data, opts={}){
+  const {w=460,h=160,color='var(--a1)',label='',showValues=true} = opts;
+  const max = Math.max(...data.map(d=>d.v), 1);
+  const barW = Math.floor((w - 40) / data.length) - 6;
+  const pad = 30;
+  let bars = '';
+  let xlbls = '';
+  data.forEach((d,i) => {
+    const bh = Math.max(2, Math.floor((d.v / max) * (h - pad - 10)));
+    const x = 40 + i * ((w-40)/data.length) + 3;
+    const y = h - pad - bh;
+    const col = d.color || color;
+    bars += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" fill="${col}" rx="3" opacity=".85"
+      onmouseover="showTip(event,'${d.label}: ${typeof d.v==='number'&&d.v>999?'$'+Math.round(d.v/1000)+'K':d.v}')"
+      onmouseout="hideTip()" style="cursor:pointer;transition:opacity .15s" onmousedown="this.style.opacity='.6'" onmouseup="this.style.opacity='.85'"/>`;
+    if(showValues && bh > 16){
+      bars += `<text x="${x+barW/2}" y="${y-4}" text-anchor="middle" font-size="9" fill="${col}" font-family="var(--mono)">${typeof d.v==='number'&&d.v>999?'$'+Math.round(d.v/1000)+'K':d.v}</text>`;
+    }
+    const lbl = d.label.length > 8 ? d.label.substring(0,7)+'…' : d.label;
+    xlbls += `<text x="${x+barW/2}" y="${h-8}" text-anchor="middle" font-size="9" fill="var(--t3)" font-family="var(--ui)">${lbl}</text>`;
+  });
+  // Y axis
+  let yAxis = '';
+  [0,0.25,0.5,0.75,1].forEach(p => {
+    const y = h - pad - Math.floor(p*(h-pad-10));
+    const val = Math.round(max*p);
+    const lbl = val > 999 ? '$'+Math.round(val/1000)+'K' : val;
+    yAxis += `<line x1="36" y1="${y}" x2="${w}" y2="${y}" stroke="var(--b1)" stroke-width="1"/>`;
+    yAxis += `<text x="32" y="${y+3}" text-anchor="end" font-size="8" fill="var(--t3)" font-family="var(--mono)">${lbl}</text>`;
+  });
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${yAxis}${bars}${xlbls}</svg><div class="chart-tooltip" id="chartTip"></div></div>`;
+}
+
+function svgDonut(data, opts={}){
+  const {size=160, label='', centerVal='', centerLbl=''} = opts;
+  const total = data.reduce((s,d)=>s+d.v, 0);
+  const r = size/2 - 20;
+  const cx = size/2, cy = size/2;
+  let paths = '';
+  let legend = '';
+  let angle = -Math.PI/2;
+  data.forEach((d,i) => {
+    const slice = (d.v/total) * 2 * Math.PI;
+    const x1 = cx + r*Math.cos(angle);
+    const y1 = cy + r*Math.sin(angle);
+    const x2 = cx + r*Math.cos(angle+slice);
+    const y2 = cy + r*Math.sin(angle+slice);
+    const large = slice > Math.PI ? 1 : 0;
+    const pct = Math.round(d.v/total*100);
+    paths += `<path d="M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z"
+      fill="${d.color}" opacity=".85" style="cursor:pointer;transition:opacity .15s"
+      onmouseover="showTip(event,'${d.label}: ${d.v} (${pct}%)')" onmouseout="hideTip()"
+      onmouseenter="this.style.opacity='1'" onmouseleave="this.style.opacity='.85'"/>`;
+    // inner ring hole
+    const ir = r*0.55;
+    angle += slice;
+    legend += `<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;font-size:11px;">
+      <div style="width:10px;height:10px;border-radius:2px;background:${d.color};flex-shrink:0"></div>
+      <span style="color:var(--t2)">${d.label}</span>
+      <span style="color:var(--t3);margin-left:auto;font-family:var(--mono);font-size:10px">${pct}%</span>
+    </div>`;
+  });
+  // hole
+  paths += `<circle cx="${cx}" cy="${cy}" r="${r*0.52}" fill="var(--s1)"/>`;
+  if(centerVal) paths += `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-size="15" font-weight="800" fill="var(--t1)" font-family="var(--mono)">${centerVal}</text>`;
+  if(centerLbl) paths += `<text x="${cx}" y="${cy+12}" text-anchor="middle" font-size="9" fill="var(--t3)" font-family="var(--ui)">${centerLbl}</text>`;
+  return `<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+    <div class="chart-wrap" style="width:${size}px;flex-shrink:0;position:relative;">
+      <svg viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">${paths}</svg>
+      <div class="chart-tooltip" id="donutTip${Math.random().toString(36).slice(2,6)}"></div>
+    </div>
+    <div style="flex:1;min-width:120px">${legend}</div>
+  </div>`;
+}
+
+function svgLine(series, opts={}){
+  const {w=460,h=120,colors=['var(--a1)','var(--a3)','var(--a2)']} = opts;
+  const allVals = series.flatMap(s=>s.data);
+  const max = Math.max(...allVals, 1);
+  const min = Math.min(...allVals, 0);
+  const range = max - min || 1;
+  const pad = {t:10,b:30,l:40,r:10};
+  const W = w-pad.l-pad.r;
+  const H = h-pad.t-pad.b;
+  let paths = '';
+  let dots = '';
+  series.forEach((s,si) => {
+    const col = colors[si % colors.length];
+    const pts = s.data.map((v,i)=>{
+      const x = pad.l + (i/(s.data.length-1))*W;
+      const y = pad.t + H - ((v-min)/range)*H;
+      return `${x},${y}`;
+    });
+    paths += `<polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    s.data.forEach((v,i)=>{
+      const x = pad.l + (i/(s.data.length-1))*W;
+      const y = pad.t + H - ((v-min)/range)*H;
+      dots += `<circle cx="${x}" cy="${y}" r="3" fill="${col}"
+        onmouseover="showTip(event,'${s.label||''} ${s.labels?.[i]||i}: ${typeof v==='number'&&v>999?'$'+Math.round(v/1000)+'K':v}')"
+        onmouseout="hideTip()" style="cursor:pointer"/>`;
+    });
+  });
+  // x labels
+  let xlbls = '';
+  if(series[0]?.labels){
+    series[0].labels.forEach((lbl,i)=>{
+      const x = pad.l + (i/(series[0].labels.length-1))*W;
+      xlbls += `<text x="${x}" y="${h-6}" text-anchor="middle" font-size="9" fill="var(--t3)" font-family="var(--ui)">${lbl}</text>`;
+    });
+  }
+  // y axis line
+  const yAxis = `<line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+H}" stroke="var(--b1)" stroke-width="1"/>
+    <line x1="${pad.l}" y1="${pad.t+H}" x2="${pad.l+W}" y2="${pad.t+H}" stroke="var(--b1)" stroke-width="1"/>`;
+  return `<div class="chart-wrap"><svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${yAxis}${paths}${dots}${xlbls}</svg><div class="chart-tooltip" id="lineTip${Math.random().toString(36).slice(2,6)}"></div></div>`;
+}
+
+function svgSparkline(data, color='var(--a1)', w=80, h=28){
+  const max=Math.max(...data,1), min=Math.min(...data,0), range=max-min||1;
+  const pts = data.map((v,i)=>`${(i/(data.length-1))*w},${h-((v-min)/range)*(h-4)-2}`);
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${(data.length-1)/(data.length-1)*w}" cy="${h-((data[data.length-1]-min)/range)*(h-4)-2}" r="2.5" fill="${color}"/>
+  </svg>`;
+}
+
+function svgRing(pct, color='var(--a3)', size=140){
+  const r=50, cx=70, cy=70, circ=2*Math.PI*r;
+  const dash=circ*(pct/100), gap=circ-dash;
+  const col = pct>=100?'var(--ok)':pct>=80?'var(--a3)':pct>=60?'var(--warn)':'var(--err)';
+  return `<div class="ring-wrap" style="width:${size}px;height:${size}px;">
+    <svg viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" style="transform:rotate(-90deg)">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--s3)" stroke-width="14"/>
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${col}" stroke-width="14"
+        stroke-dasharray="${dash} ${gap}" stroke-linecap="round"
+        style="transition:stroke-dasharray .8s cubic-bezier(.4,0,.2,1)"/>
+    </svg>
+    <div class="ring-center">
+      <span class="ring-pct" style="color:${col}">${pct}%</span>
+      <span class="ring-lbl">Attainment</span>
+    </div>
+  </div>`;
+}
+
+// ── TOOLTIP ──────────────────────────────────────────────────────────────────
+function showTip(e, text){
+  let tip = document.getElementById('chartTip');
+  if(!tip){ tip = document.createElement('div'); tip.id='chartTip'; tip.className='chart-tooltip'; document.body.appendChild(tip); }
+  tip.textContent = text;
+  tip.style.display = 'block';
+  tip.style.left = (e.pageX+10)+'px';
+  tip.style.top  = (e.pageY-30)+'px';
+}
+function hideTip(){ const t=document.getElementById('chartTip'); if(t) t.style.display='none'; }
+
+// ── ANIMATED COUNTER ─────────────────────────────────────────────────────────
+function animateCounters(){
+  document.querySelectorAll('.kc-val[data-target]').forEach(el=>{
+    const target = parseFloat(el.dataset.target);
+    const prefix = el.dataset.prefix||'';
+    const suffix = el.dataset.suffix||'';
+    const dur = 800;
+    const start = performance.now();
+    function step(now){
+      const p = Math.min((now-start)/dur, 1);
+      const ease = 1-Math.pow(1-p, 3);
+      const val = target*ease;
+      el.textContent = prefix+(val>999999?'$'+Math.round(val/1000000)+'M':val>999?'$'+Math.round(val/1000)+'K':Math.round(val))+suffix;
+      if(p<1) requestAnimationFrame(step);
+      else el.textContent = prefix+(target>999999?'$'+Math.round(target/1000000)+'M':target>999?'$'+Math.round(target/1000)+'K':Math.round(target))+suffix;
+    }
+    requestAnimationFrame(step);
+  });
+}
+
+// ── PERIOD TOOLBAR ───────────────────────────────────────────────────────────
+function periodBar(onSelect){
+  return `<div class="dash-period-bar">
+    <span style="font-size:10px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px">Period:</span>
+    ${DS.periods.map(p=>`<div class="period-btn${p===DS.period?' on':''}" onclick="setPeriod('${p}',this,'${onSelect}')">${p}</div>`).join('')}
+    <button class="export-btn" onclick="exportDashboard()">↓ Export PNG</button>
+  </div>`;
+}
+
+function setPeriod(p, el, fn){
+  DS.period = p;
+  document.querySelectorAll('.period-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  if(fn && window[fn]) window[fn]();
+}
+
+// ── SORTABLE TABLE ────────────────────────────────────────────────────────────
+function makeSortable(tableId){
+  const tbl = document.getElementById(tableId);
+  if(!tbl) return;
+  let sortCol=-1, sortDir=1;
+  tbl.querySelectorAll('thead th').forEach((th,i)=>{
+    th.onclick=()=>{
+      if(sortCol===i) sortDir*=-1; else { sortCol=i; sortDir=1; }
+      tbl.querySelectorAll('thead th').forEach(h=>{ h.classList.remove('sort-asc','sort-desc'); });
+      th.classList.add(sortDir===1?'sort-asc':'sort-desc');
+      const tbody=tbl.querySelector('tbody');
+      const rows=[...tbody.querySelectorAll('tr')];
+      rows.sort((a,b)=>{
+        const av=a.querySelectorAll('td')[i]?.textContent||'';
+        const bv=b.querySelectorAll('td')[i]?.textContent||'';
+        const an=parseFloat(av.replace(/[$,K%]/g,''));
+        const bn=parseFloat(bv.replace(/[$,K%]/g,''));
+        if(!isNaN(an)&&!isNaN(bn)) return (an-bn)*sortDir;
+        return av.localeCompare(bv)*sortDir;
+      });
+      rows.forEach(r=>tbody.appendChild(r));
+    };
+  });
+}
+
+function makeSearchable(tableId, inputId){
+  const inp = document.getElementById(inputId);
+  const tbl = document.getElementById(tableId);
+  if(!inp||!tbl) return;
+  inp.oninput=()=>{
+    const q=inp.value.toLowerCase();
+    tbl.querySelectorAll('tbody tr').forEach(r=>{
+      r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';
+    });
+  };
+}
+
+// ── EXPORT DASHBOARD ─────────────────────────────────────────────────────────
+function exportDashboard(){
+  const dv = document.querySelector('.dv.on');
+  if(!dv){ toast('No active dashboard','err'); return; }
+  // Use html2canvas-like approach via blob URL
+  const html = `<!DOCTYPE html><html><head><style>
+    body{background:#0f1117;color:#e8edf5;font-family:system-ui;padding:20px}
+    ${document.querySelector('style').textContent}
+  </style></head><body>${dv.innerHTML}</body></html>`;
+  const blob = new Blob([html], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `realicm_${DS.period.replace(/\s/g,'_')}.html`;
+  a.click();
+  toast('Dashboard exported as HTML','ok');
+}
+
+// ── KPI CARD BUILDER ──────────────────────────────────────────────────────────
+function kpiCard(id, label, target, prefix='', suffix='', sub='', delta='', deltaUp=undefined, color='var(--a1)', drillFn=''){
+  const dc = deltaUp===undefined?'':('kc-delta '+(deltaUp?'up':'dn'));
+  return `<div class="kc" style="--kc:${color}" onclick="${drillFn?drillFn+'()':''}" title="${drillFn?'Click to drill down':''}">
+    <div class="kc-lbl">${label}</div>
+    <div class="kc-val" data-target="${target}" data-prefix="${prefix}" data-suffix="${suffix}">${prefix}${target}${suffix}</div>
+    <div class="kc-sub">${sub}</div>
+    ${delta?`<div class="${dc}">${delta}</div>`:''}
+  </div>`;
+}
+
+function pill(t,c){ return `<span class="bp bp-${c}">${t}</span>`; }
+const liveTag=()=>ST.conn?'<span class="live-tag">LIVE</span>':'<span class="demo-tag">DEMO</span>';
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 1: OVERVIEW
+// ════════════════════════════════════════════════════════════════════════════
+function renderOverview(){
+  const el = document.getElementById('dv-overview');
+  const planData = [
+    {label:'IC Simple',v:4820000,color:'var(--a1)'},
+    {label:'EMEA Accel',v:3640000,color:'var(--a5)'},
+    {label:'APJ Std',v:2980000,color:'var(--a3)'},
+    {label:'Americas Q4',v:2280000,color:'var(--warn)'},
+    {label:'Channel',v:1620000,color:'var(--t3)'},
+  ];
+  const buData = [
+    {label:'McAfee Ent LE',v:1420,color:'var(--a1)'},
+    {label:'McAfee BU',v:887,color:'var(--a5)'},
+    {label:'McAfee Corp',v:540,color:'var(--a3)'},
+  ];
+  const trendData = {
+    data:[8.2,9.1,10.4,11.8,11.2,12.7],
+    labels:['Oct','Nov','Dec','Jan','Feb','Mar'],
+    label:'Commission $M'
+  };
+  el.innerHTML = `
+    ${periodBar('renderOverview')}
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <h2>🏠 ICM Executive Overview <span style="font-size:12px;color:var(--t3);font-weight:400">${DS.period}</span></h2>
+        <div class="dhd-r">${liveTag()}</div>
+      </div>
+      <div class="g4">
+        ${kpiCard('kpi-part','Active Participants',2847,'','','Across all comp plans','↑ +142 vs last period',true,'var(--a1)','drillParticipants')}
+        ${kpiCard('kpi-otv','Total OTV',48300000,'','','On-Target Variable','↑ +6.2% YoY',true,'var(--a5)','drillOTV')}
+        ${kpiCard('kpi-comm','Commission Earned',12700000,'','','Calculated · Pending payout','↓ -2.1% vs target',false,'var(--a3)','drillEarnings')}
+        ${kpiCard('kpi-appr','Pending Approvals',183,'','','Comp letters awaiting sign-off','↓ -34 from last week',true,'var(--warn)','drillApprovals')}
+      </div>
+      <!-- Drill panel -->
+      <div class="drill-panel" id="overviewDrill">
+        <div class="drill-hd">
+          <span class="drill-title" id="drillTitle">Drill Down</span>
+          <button class="btn b-ghost" style="padding:3px 9px;font-size:10px" onclick="document.getElementById('overviewDrill').classList.remove('open')">✕</button>
+        </div>
+        <div id="drillContent" style="padding:14px 15px;"></div>
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">💰 Earnings by Comp Plan — ${DS.period}</span></div>
+          <div class="dcbody">${svgBar(planData,{w:440,h:170,label:'Earnings'})}</div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">👥 Participants by Business Unit</span></div>
+          <div class="dcbody">${svgDonut(buData,{size:150,centerVal:'2,847',centerLbl:'Total'})}</div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">📈 Commission Trend — Last 6 Months</span></div>
+        <div class="dcbody">${svgLine([trendData],{w:880,h:120,colors:['var(--a1)']})}</div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">🔄 ICM End-to-End Pipeline</span></div>
+        <div class="dcbody" style="display:flex;gap:4px;">
+          ${[['CX Sales','Opportunity','ok','✓','100%'],['AR/ERP','Invoice & Rev','ok','✓','100%'],['ICM Credits','Transaction Credit','ok','✓','98.2%'],['ICM Calculate','Earnings Calc','warn','●','Running'],['BPM Approve','Comp Letter','t3','○','Pending'],['Payroll','Commission Payout','t3','○','Pending']].map(([t,s,c,ic,stat])=>
+            `<div style="flex:1;text-align:center;padding:12px 6px;background:${c==='ok'?'var(--ok)12':c==='warn'?'var(--warn)12':'var(--s2)'};border-radius:5px;cursor:pointer;" onclick="toast('${t}: ${stat}','inf')">
+              <div style="font-size:11px;font-weight:700;color:${c==='ok'?'var(--ok)':c==='warn'?'var(--warn)':'var(--t4)'}">${t}</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:3px">${s}</div>
+              <div style="margin-top:5px;font-size:14px;color:${c==='ok'?'var(--ok)':c==='warn'?'var(--warn)':'var(--t4)'}">${ic}</div>
+              <div style="font-size:9px;margin-top:3px;color:var(--t3)">${stat}</div>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  setTimeout(animateCounters, 100);
+  setTimeout(()=>{
+    makeSortable('overviewBuTbl');
+  }, 200);
+}
+
+// Drill functions
+function drillParticipants(){
+  document.getElementById('drillTitle').textContent='👥 Participants Breakdown';
+  document.getElementById('drillContent').innerHTML=svgBar([
+    {label:'IC Simple',v:842,color:'var(--a1)'},{label:'EMEA Accel',v:634,color:'var(--a5)'},
+    {label:'APJ Std',v:521,color:'var(--a3)'},{label:'Americas Q4',v:398,color:'var(--warn)'},{label:'Channel',v:283,color:'var(--t3)'},
+  ],{w:440,h:130,label:'Participants'});
+  document.getElementById('overviewDrill').classList.add('open');
+}
+function drillOTV(){
+  document.getElementById('drillTitle').textContent='💵 OTV by Region';
+  document.getElementById('drillContent').innerHTML=svgDonut([
+    {label:'Americas',v:18200000,color:'var(--a1)'},{label:'EMEA',v:14600000,color:'var(--a5)'},
+    {label:'APJ',v:9800000,color:'var(--a3)'},{label:'Corp',v:5700000,color:'var(--warn)'},
+  ],{size:140,centerVal:'$48M',centerLbl:'Total OTV'});
+  document.getElementById('overviewDrill').classList.add('open');
+}
+function drillEarnings(){
+  document.getElementById('drillTitle').textContent='💰 Earnings Trend';
+  document.getElementById('drillContent').innerHTML=svgLine([
+    {data:[9.1,10.4,11.8,11.2,12.7,13.1],labels:['Oct','Nov','Dec','Jan','Feb','Mar'],label:'Earnings $M'},
+    {data:[10.2,10.8,11.0,11.6,12.0,12.4],labels:['Oct','Nov','Dec','Jan','Feb','Mar'],label:'Target $M'},
+  ],{w:440,h:120,colors:['var(--a3)','var(--t3)']});
+  document.getElementById('overviewDrill').classList.add('open');
+}
+function drillApprovals(){
+  document.getElementById('drillTitle').textContent='✅ Approval Age Distribution';
+  document.getElementById('drillContent').innerHTML=svgBar([
+    {label:'< 1 day',v:52,color:'var(--ok)'},{label:'1-3 days',v:68,color:'var(--a3)'},
+    {label:'3-7 days',v:41,color:'var(--warn)'},{label:'> 7 days',v:22,color:'var(--err)'},
+  ],{w:440,h:130,label:'Tasks'});
+  document.getElementById('overviewDrill').classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 2: SELLER VIEW
+// ════════════════════════════════════════════════════════════════════════════
+function renderSeller(){
+  const el = document.getElementById('dv-seller');
+  const creditData = [
+    {label:'Corp Travel',v:1562000,color:'var(--a1)'},{label:'Digital Ch',v:960000,color:'var(--a5)'},
+    {label:'Leisure',v:667000,color:'var(--a3)'},{label:'Loyalty',v:254000,color:'var(--warn)'},
+  ];
+  const monthlyData = {data:[1.8,2.1,1.9,2.4,2.6,2.8,2.2,2.9,3.1,3.4,2.8,3.0],
+    labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],label:'Commission $K'};
+  el.innerHTML = `
+    ${periodBar('renderSeller')}
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <div>
+          <h2>👤 Seller Dashboard</h2>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">Lisa Chen · Senior AE · McAfee Enterprise LE BU</div>
+        </div>
+        <div class="dhd-r">${liveTag()}</div>
+      </div>
+      <div class="g4">
+        ${kpiCard('','Quota Attainment',92,'','%','Of $5.9M target','↑ +4.2% vs last quarter',true,'var(--a3)')}
+        ${kpiCard('','YTD Commission',26256,'$','','Of $100K OTE','21.7% of annual target',undefined,'var(--a1)')}
+        ${kpiCard('','Active Credits',3443000,'$','','This quarter','↑ +12 new credits',true,'var(--a5)')}
+        ${kpiCard('','Open Dispute',3840,'$','','DSP-2603-001','⚠ Action needed',false,'var(--err)')}
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">🎯 Quota Attainment Ring</span></div>
+          <div class="dcbody" style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+            ${svgRing(92,'var(--a3)',160)}
+            <div style="flex:1;min-width:140px">
+              ${[['Revenue Target','$5,441,000',78,'var(--ok)'],['Commission Earned','$26,256',26,'var(--a1)'],['OTE Progress','26%',26,'var(--a5)']].map(([l,v,p,c])=>`
+                <div style="margin-bottom:12px">
+                  <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+                    <span style="color:var(--t3)">${l}</span><span style="color:var(--t1);font-weight:600">${v}</span>
+                  </div>
+                  <div class="pt"><div class="pf2" style="width:${p}%;background:${c}"></div></div>
+                </div>`).join('')}
+              <div style="padding:10px;background:var(--s2);border-radius:6px;font-size:11px;color:var(--t3)">
+                💡 Close <strong style="color:var(--a1)">$45K more</strong> to hit Tier 4 (11% rate)
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">💰 Credits by Product</span></div>
+          <div class="dcbody">${svgBar(creditData,{w:300,h:150,label:'Credits'})}</div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">📈 Monthly Commission Trend</span></div>
+        <div class="dcbody">${svgLine([monthlyData],{w:880,h:110,colors:['var(--a1)']})}</div>
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">⚡ What-If Calculator</span></div>
+          <div class="dcbody">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div class="field"><label>Deal Amount ($)</label><input id="dealAmt" type="number" value="500000" oninput="calcWhatIf()" style="background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:6px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);width:100%;outline:none;"></div>
+              <div class="field"><label>Current Attainment (%)</label><input id="dealAttain" type="number" value="92" min="0" max="200" oninput="calcWhatIf()" style="background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:6px 10px;font-size:13px;color:var(--t1);font-family:var(--mono);width:100%;outline:none;"></div>
+            </div>
+            <div id="whatIfResult" style="background:var(--s2);border-radius:8px;padding:14px;text-align:center">
+              <div style="font-size:28px;font-weight:800;color:var(--ok);font-family:var(--mono)" id="whatIfComm">$45,000</div>
+              <div style="font-size:12px;color:var(--t3);margin-top:4px" id="whatIfRate">at 9.0% (Tier 3)</div>
+              <div id="whatIfTiers" style="margin-top:10px;display:flex;gap:4px;justify-content:center"></div>
+            </div>
+          </div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">📋 Recent Transactions</span></div>
+          <div class="dcbody">
+            <table class="dtbl">
+              <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                ${[['Mar 15','Revenue Credit','$892K','bp-g'],['Mar 12','Revenue Credit','$543K','bp-g'],['Feb 28','Adjustment','-$12K','bp-e'],['Feb 20','Revenue Credit','$1.2M','bp-g'],['Jan 31','Payment','$18.4K','bp-b']].map(([d,t,a,s])=>
+                  `<tr><td>${d}</td><td>${t}</td><td style="font-family:var(--mono)">${a}</td><td><span class="bp ${s}">${s==='bp-g'?'Approved':s==='bp-e'?'Reversed':s==='bp-b'?'Paid':'Pending'}</span></td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(()=>{ animateCounters(); calcWhatIf(); }, 100);
+}
+
+function calcWhatIf(){
+  const deal = parseFloat(document.getElementById('dealAmt')?.value)||0;
+  const attain = parseFloat(document.getElementById('dealAttain')?.value)||0;
+  const tiers = [{min:0,max:60,rate:.05,label:'Tier 1'},{min:60,max:80,rate:.07,label:'Tier 2'},{min:80,max:90,rate:.08,label:'Tier 3'},{min:90,max:100,rate:.09,label:'Tier 3+'},{min:100,max:999,rate:.11,label:'Tier 4'}];
+  const tier = tiers.find(t=>attain>=t.min&&attain<t.max)||tiers[tiers.length-1];
+  const comm = Math.round(deal*tier.rate);
+  const el = document.getElementById('whatIfComm');
+  if(el) el.textContent = '$'+comm.toLocaleString();
+  const rl = document.getElementById('whatIfRate');
+  if(rl) rl.textContent = `at ${(tier.rate*100).toFixed(1)}% (${tier.label})`;
+  const tc = document.getElementById('whatIfTiers');
+  if(tc) tc.innerHTML = tiers.map(t=>`<div style="flex:1;text-align:center;padding:4px;border-radius:4px;font-size:9px;background:${t===tier?'var(--a1)22':'transparent'};border:1px solid ${t===tier?'var(--a1)':'var(--b2)'};color:${t===tier?'var(--a1)':'var(--t3)'};cursor:pointer" onclick="document.getElementById('dealAttain').value=${t.min+1};calcWhatIf()">${t.label}<br>${(t.rate*100).toFixed(0)}%</div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 3: COMP PLANS
+// ════════════════════════════════════════════════════════════════════════════
+function renderPlans(){
+  const el = document.getElementById('dv-plans');
+  const plans = [
+    {name:'IC Simple Per Event 2017',display:'IC Simple - Enterprise',bu:'McAfee Ent LE',parts:842,otv:'$24.8M',status:'Active',sc:'g'},
+    {name:'McAfee EMEA Accelerator',display:'EMEA Accelerator',bu:'McAfee BU',parts:634,otv:'$18.6M',status:'Active',sc:'g'},
+    {name:'McAfee APJ Standard',display:'APJ Standard',bu:'McAfee Corp',parts:521,otv:'$14.2M',status:'Active',sc:'g'},
+    {name:'McAfee Americas Q4',display:'Americas Q4 Plan',bu:'McAfee Ent LE',parts:398,otv:'$9.8M',status:'Active',sc:'g'},
+    {name:'McAfee Channel Partner',display:'Channel Partner',bu:'McAfee BU',parts:283,otv:'$6.3M',status:'Inactive',sc:'e'},
+    {name:'McAfee Corp Overlay',display:'Corporate Overlay',bu:'McAfee Corp',parts:169,otv:'$3.1M',status:'Inactive',sc:'e'},
+  ];
+  el.innerHTML = `
+    ${periodBar('renderPlans')}
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <h2>📋 Compensation Plans</h2>
+        <div class="dhd-r">${liveTag()}</div>
+      </div>
+      <div class="g4" style="margin-bottom:18px">
+        ${kpiCard('','Active Plans',4,'','','Current period','',undefined,'var(--a1)')}
+        ${kpiCard('','Total Participants',2847,'','','Across all active plans','',undefined,'var(--a3)')}
+        ${kpiCard('','Total OTV',76800000,'$','','All active plans combined','',undefined,'var(--a5)')}
+        ${kpiCard('','Inactive Plans',2,'','','Pending cleanup','',undefined,'var(--t3)')}
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">👥 Participants per Plan</span></div>
+          <div class="dcbody">${svgBar(plans.filter(p=>p.sc==='g').map(p=>({label:p.display.split(' ')[0],v:p.parts,color:'var(--a1)'})),{w:320,h:140,label:'Participants'})}</div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">💰 OTV by Plan</span></div>
+          <div class="dcbody">${svgDonut(plans.filter(p=>p.sc==='g').map((p,i)=>({label:p.display.split(' ')[0],v:parseFloat(p.otv.replace(/[$M]/g,'')),color:['var(--a1)','var(--a5)','var(--a3)','var(--warn)'][i]})),{size:150,centerVal:'$76M',centerLbl:'Total OTV'})}</div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">All Compensation Plans</span></div>
+        <div class="tbl-search-row">
+          <input class="tbl-search-inp" id="planSearch" placeholder="🔍 Search plans…">
+          <select class="lim-sel" onchange="filterPlanStatus(this.value)"><option value="">All Status</option><option>Active</option><option>Inactive</option></select>
+        </div>
+        <div style="overflow:auto">
+          <table class="dtbl" id="plansTbl">
+            <thead><tr><th>Plan Name</th><th>Display Name</th><th>BU</th><th>Participants</th><th>Total OTV</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+              ${plans.map((p,i)=>`<tr id="plan-row-${i}">
+                <td style="color:var(--t1);font-weight:600;font-size:11px">${p.name}</td>
+                <td>${p.display}</td><td>${p.bu}</td>
+                <td style="font-family:var(--mono)">${p.parts}</td>
+                <td style="font-family:var(--mono)">${p.otv}</td>
+                <td><span class="bp bp-${p.sc}">${p.status}</span></td>
+                <td><button class="tbar-btn" onclick="expandPlan(${i})">▶ Detail</button></td>
+              </tr>
+              <tr id="plan-detail-${i}" style="display:none"><td colspan="7" style="padding:0">
+                <div style="padding:14px 16px;background:var(--s2);border-top:1px solid var(--b1)">
+                  <div style="font-size:11px;font-weight:700;color:var(--a1);margin-bottom:8px">Plan Components</div>
+                  <table class="dtbl"><thead><tr><th>Component</th><th>Formula Type</th><th>Credit Category</th><th>Weight</th></tr></thead>
+                  <tbody><tr><td>New Business Revenue</td><td>Incentive Formula</td><td>Revenue</td><td>60%</td></tr>
+                  <tr><td>Renewal Revenue</td><td>Incentive Formula</td><td>Renewal</td><td>30%</td></tr>
+                  <tr><td>MBO Objectives</td><td>Measure Formula</td><td>MBO</td><td>10%</td></tr></tbody></table>
+                </div>
+              </td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(()=>{
+    animateCounters();
+    makeSortable('plansTbl');
+    makeSearchable('plansTbl','planSearch');
+  }, 100);
+}
+
+function expandPlan(i){
+  const detail = document.getElementById('plan-detail-'+i);
+  if(!detail) return;
+  const open = detail.style.display!=='none';
+  detail.style.display = open ? 'none' : 'table-row';
+}
+
+function filterPlanStatus(val){
+  document.querySelectorAll('#plansTbl tbody tr[id^="plan-row"]').forEach(r=>{
+    if(!val){ r.style.display=''; return; }
+    r.style.display = r.textContent.includes(val) ? '' : 'none';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 4: EARNINGS
+// ════════════════════════════════════════════════════════════════════════════
+function renderEarnings(){
+  const el = document.getElementById('dv-earnings');
+  const earners = [
+    {n:'John D.',plan:'IC Simple',credits:'$892K',comm:'$89,400',attain:'112%',sc:'g',spark:[72,80,88,95,105,112]},
+    {n:'Sarah C.',plan:'EMEA Accel',credits:'$743K',comm:'$74,300',attain:'98%',sc:'g',spark:[60,72,81,88,92,98]},
+    {n:'Mike R.',plan:'Americas Q4',credits:'$681K',comm:'$68,100',attain:'95%',sc:'g',spark:[55,68,78,84,90,95]},
+    {n:'Ana L.',plan:'APJ Std',credits:'$592K',comm:'$59,200',attain:'84%',sc:'w',spark:[50,58,65,72,78,84]},
+    {n:'David K.',plan:'IC Simple',credits:'$534K',comm:'$53,400',attain:'78%',sc:'w',spark:[40,50,58,65,70,78]},
+    {n:'Emma T.',plan:'EMEA Accel',credits:'$480K',comm:'$48,000',attain:'72%',sc:'w',spark:[35,44,52,60,66,72]},
+    {n:'Carlos M.',plan:'Americas Q4',credits:'$312K',comm:'$31,200',attain:'48%',sc:'e',spark:[22,28,35,38,42,48]},
+  ];
+  el.innerHTML = `
+    ${periodBar('renderEarnings')}
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <h2>💰 Commission Earnings <span style="font-size:12px;color:var(--t3);font-weight:400">${DS.period}</span></h2>
+        <div class="dhd-r">${liveTag()}</div>
+      </div>
+      <div class="g4">
+        ${kpiCard('','Total Calculated',12700000,'$','','All participants',undefined,undefined,'var(--ok)')}
+        ${kpiCard('','Avg Per Participant',4462,'$','','2,847 participants',undefined,undefined,'var(--a1)')}
+        ${kpiCard('','Highest Earner',89400,'$','','John D. · IC Simple','',undefined,'var(--a5)')}
+        ${kpiCard('','Below Target',27,'','','Flagged for review','⚠ Action needed',false,'var(--err)','drillBelowTarget')}
+      </div>
+      <div class="drill-panel" id="earningsDrill">
+        <div class="drill-hd"><span class="drill-title" id="earningsDrillTitle">Below Target</span>
+          <button class="btn b-ghost" style="padding:3px 9px;font-size:10px" onclick="document.getElementById('earningsDrill').classList.remove('open')">✕</button></div>
+        <div id="earningsDrillContent" style="padding:14px 15px"></div>
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">📊 Attainment Distribution</span></div>
+          <div class="dcbody">${svgBar([
+            {label:'> 100%',v:186,color:'var(--ok)'},{label:'90-100%',v:412,color:'var(--a3)'},
+            {label:'80-90%',v:698,color:'var(--a1)'},{label:'60-80%',v:924,color:'var(--warn)'},
+            {label:'< 60%',v:627,color:'var(--err)'},
+          ],{w:320,h:150,label:'Participants'})}</div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">🏆 Top Earners by Plan</span></div>
+          <div class="dcbody">${svgDonut([
+            {label:'IC Simple',v:4820000,color:'var(--a1)'},{label:'EMEA Accel',v:3640000,color:'var(--a5)'},
+            {label:'APJ Std',v:2980000,color:'var(--a3)'},{label:'Americas Q4',v:2280000,color:'var(--warn)'},
+          ],{size:150,centerVal:'$13.7M',centerLbl:'Q1 Total'})}</div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">Top Earners — ${DS.period}</span></div>
+        <div class="tbl-search-row"><input class="tbl-search-inp" id="earnSearch" placeholder="🔍 Search earners…"></div>
+        <div style="overflow:auto">
+          <table class="dtbl" id="earnTbl">
+            <thead><tr><th>#</th><th>Participant</th><th>Plan</th><th>Credits</th><th>Commission</th><th>Attainment</th><th>Trend</th><th>Status</th></tr></thead>
+            <tbody>
+              ${earners.map((e,i)=>`<tr style="cursor:pointer" onclick="toast('${e.n}: ${e.comm} commission, ${e.attain} attainment','inf')">
+                <td style="color:var(--t3)">${i+1}</td>
+                <td style="color:var(--t1);font-weight:600">${e.n}</td>
+                <td>${e.plan}</td>
+                <td style="font-family:var(--mono)">${e.credits}</td>
+                <td style="color:var(--ok);font-weight:600;font-family:var(--mono)">${e.comm}</td>
+                <td><span class="bp bp-${e.sc}">${e.attain}</span></td>
+                <td>${svgSparkline(e.spark,e.sc==='g'?'var(--ok)':e.sc==='w'?'var(--warn)':'var(--err)')}</td>
+                <td><span class="bp bp-b">CALC</span></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(()=>{ animateCounters(); makeSortable('earnTbl'); makeSearchable('earnTbl','earnSearch'); }, 100);
+}
+
+function drillBelowTarget(){
+  document.getElementById('earningsDrillTitle').textContent='⚠ Below Target Participants';
+  document.getElementById('earningsDrillContent').innerHTML=`<div style="font-size:12px;color:var(--t3)">27 participants below 60% attainment — review comp plan assignment and credit accuracy.</div>`+
+    svgBar([{label:'IC Simple',v:8,color:'var(--err)'},{label:'EMEA Accel',v:6,color:'var(--err)'},{label:'APJ Std',v:7,color:'var(--err)'},{label:'Americas Q4',v:6,color:'var(--err)'}],{w:440,h:120,label:'Below Target'});
+  document.getElementById('earningsDrill').classList.add('open');
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 5: APPROVALS
+// ════════════════════════════════════════════════════════════════════════════
+function renderApprovals(){
+  const el = document.getElementById('dv-approvals');
+  const tasks = [
+    {p:'John Smith',plan:'IC Simple Per Event',task:'TSK-20391',status:'ASSIGNED',age:2,assignee:'mgr@mcafee.com',sc:'b'},
+    {p:'Sarah Chen',plan:'EMEA Accelerator',task:'TSK-20388',status:'ESCALATED',age:8,assignee:'vp@mcafee.com',sc:'e'},
+    {p:'Mike Johnson',plan:'Americas Q4',task:'TSK-20385',status:'ASSIGNED',age:1,assignee:'mgr2@mcafee.com',sc:'b'},
+    {p:'Ana Lopez',plan:'APJ Standard',task:'TSK-20380',status:'COMPLETED',age:4,assignee:'mgr3@mcafee.com',sc:'g'},
+    {p:'David Kim',plan:'IC Simple Per Event',task:'TSK-20375',status:'ASSIGNED',age:3,assignee:'mgr@mcafee.com',sc:'b'},
+    {p:'Emma Torres',plan:'EMEA Accelerator',task:'TSK-20370',status:'PENDING',age:6,assignee:'—',sc:'w'},
+    {p:'Carlos Mendes',plan:'APJ Standard',task:'TSK-20365',status:'ESCALATED',age:12,assignee:'vp2@mcafee.com',sc:'e'},
+  ];
+  const ageColor = d => d<=2?'var(--ok)':d<=5?'var(--warn)':'var(--err)';
+  el.innerHTML = `
+    ${periodBar('renderApprovals')}
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <h2>✅ Approval Pipeline</h2>
+        <div class="dhd-r">${liveTag()}</div>
+      </div>
+      <div class="g4">
+        ${kpiCard('','Total Pending',183,'','','Comp letters',undefined,undefined,'var(--warn)','drillPendingApprovals')}
+        ${kpiCard('','Approved Today',44,'','','','↑ vs yesterday',true,'var(--ok)')}
+        ${kpiCard('','Escalated',12,'','','Require action','⚠ Urgent',false,'var(--err)','drillEscalated')}
+        ${kpiCard('','Avg Wait','3.2',' ','d','Time in approval',undefined,undefined,'var(--a1)')}
+      </div>
+      <div class="drill-panel" id="approvalDrill">
+        <div class="drill-hd"><span class="drill-title" id="approvalDrillTitle">Drill Down</span>
+          <button class="btn b-ghost" style="padding:3px 9px;font-size:10px" onclick="document.getElementById('approvalDrill').classList.remove('open')">✕</button></div>
+        <div id="approvalDrillContent" style="padding:14px 15px"></div>
+      </div>
+      <div class="g2">
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">📊 Approval Funnel</span></div>
+          <div class="dcbody">${svgBar([
+            {label:'Initiated',v:280,color:'var(--a1)'},{label:'In Review',v:183,color:'var(--a5)'},
+            {label:'Approved',v:83,color:'var(--ok)'},{label:'Escalated',v:12,color:'var(--err)'},
+          ],{w:320,h:140,label:'Tasks'})}</div>
+        </div>
+        <div class="dc">
+          <div class="dchd"><span class="dctitle">⏱ Age Distribution</span></div>
+          <div class="dcbody">${svgDonut([
+            {label:'< 1 day',v:52,color:'var(--ok)'},{label:'1-3 days',v:68,color:'var(--a3)'},
+            {label:'3-7 days',v:41,color:'var(--warn)'},{label:'> 7 days',v:22,color:'var(--err)'},
+          ],{size:150,centerVal:'183',centerLbl:'Pending'})}</div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">BPM Approval Tasks</span></div>
+        <div class="tbl-search-row">
+          <input class="tbl-search-inp" id="apprSearch" placeholder="🔍 Search tasks…">
+          <select class="lim-sel" onchange="filterApprStatus(this.value)"><option value="">All Status</option><option>ASSIGNED</option><option>ESCALATED</option><option>PENDING</option><option>COMPLETED</option></select>
+        </div>
+        <div style="overflow:auto">
+          <table class="dtbl" id="apprTbl">
+            <thead><tr><th>Participant</th><th>Plan</th><th>Task #</th><th>Status</th><th>Days Open</th><th>Assignee</th><th>Action</th></tr></thead>
+            <tbody>
+              ${tasks.map(t=>`<tr>
+                <td style="color:var(--t1);font-weight:600">${t.p}</td>
+                <td style="font-size:10px">${t.plan}</td>
+                <td style="color:var(--a2);font-family:var(--mono)">${t.task}</td>
+                <td><span class="bp bp-${t.sc}">${t.status}</span></td>
+                <td style="color:${ageColor(t.age)};font-family:var(--mono);font-weight:600">${t.age}d</td>
+                <td style="font-size:10px">${t.assignee}</td>
+                <td><button class="tbar-btn" onclick="toast('Action: ${t.task} — ${t.status}','inf')" style="font-size:9px;padding:2px 7px">${t.status==='COMPLETED'?'View':'Nudge'}</button></td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(()=>{ animateCounters(); makeSortable('apprTbl'); makeSearchable('apprTbl','apprSearch'); }, 100);
+}
+
+function drillPendingApprovals(){
+  document.getElementById('approvalDrillTitle').textContent='Pending by Plan';
+  document.getElementById('approvalDrillContent').innerHTML=svgBar([
+    {label:'IC Simple',v:62,color:'var(--a1)'},{label:'EMEA Accel',v:48,color:'var(--a5)'},
+    {label:'APJ Std',v:41,color:'var(--a3)'},{label:'Americas Q4',v:32,color:'var(--warn)'},
+  ],{w:440,h:120});
+  document.getElementById('approvalDrill').classList.add('open');
+}
+function drillEscalated(){
+  document.getElementById('approvalDrillTitle').textContent='Escalated Tasks Detail';
+  document.getElementById('approvalDrillContent').innerHTML=`<div style="font-size:12px;color:var(--t3)">12 tasks escalated. Average age: 9.4 days. VP action required on 4 tasks over 10 days.</div>`;
+  document.getElementById('approvalDrill').classList.add('open');
+}
+
+function filterApprStatus(val){
+  document.querySelectorAll('#apprTbl tbody tr').forEach(r=>{
+    r.style.display = !val||r.textContent.includes(val) ? '' : 'none';
+  });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 6: ANOMALIES
+// ════════════════════════════════════════════════════════════════════════════
+let anomalyFilter = 'All';
+const ANOMALIES = [
+  {id:1,sev:'Critical',icon:'🔴',cls:'e',title:'Duplicate Credit Detected',text:'Participant 21013 (John Smith) has 2 credits for TRX-8834-201 · Total: $35,960 · Plan: IC Simple Per Event 2017',action:'Review Credits',dismissed:false},
+  {id:2,sev:'Critical',icon:'🔴',cls:'e',title:'Negative Balance — Subledger',text:'Participant 21047 shows negative ending balance of -$4,200 for Period 2019-03. Possible reversal error.',action:'Review Subledger',dismissed:false},
+  {id:3,sev:'Warning',icon:'🟡',cls:'w',title:'Outlier Earner — 3.2x Average',text:'Participant 21019 earnings of $89,400 is 3.2x the plan average of $27,900. Period 2019001.',action:'Flag for Review',dismissed:false},
+  {id:4,sev:'Warning',icon:'🟡',cls:'w',title:'Missing Plan Assignment — 3 Participants',text:'Participants 21045, 21046, 21047 have no active comp plan for the current period.',action:'Assign Plans',dismissed:false},
+  {id:5,sev:'Warning',icon:'🟡',cls:'w',title:'OTV Mismatch — DFF vs Plan',text:'Participant 21033 DFF OTV ($120K) differs from plan OTV ($95K) by > 20%. Verify source data.',action:'Review OTV',dismissed:false},
+  {id:6,sev:'Info',icon:'🔵',cls:'i',title:'FX Rate Gap — EUR Conversion',text:'No EUR conversion rate for 2019-04-01 to 2019-04-30 in "Incentive Compensation Annual Rate". 48 participants affected.',action:'Add Rate',dismissed:false},
+  {id:7,sev:'Info',icon:'🔵',cls:'i',title:'Calendar Period Not Closed',text:'Period 2019-03 still shows OPEN status. Typically closed by the 5th of next month.',action:'Close Period',dismissed:false},
+];
+
+function renderAnomalies(){
+  const el = document.getElementById('dv-anomalies');
+  const counts = {Critical:ANOMALIES.filter(a=>a.sev==='Critical'&&!a.dismissed).length, Warning:ANOMALIES.filter(a=>a.sev==='Warning'&&!a.dismissed).length, Info:ANOMALIES.filter(a=>a.sev==='Info'&&!a.dismissed).length};
+  const visible = ANOMALIES.filter(a=>!a.dismissed&&(anomalyFilter==='All'||a.sev===anomalyFilter));
+  el.innerHTML = `
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd">
+        <h2>⚠️ Anomaly Detection</h2>
+        <div class="dhd-r">
+          <button class="ref-btn" onclick="rescanAnomalies()">↻ Re-scan</button>
+        </div>
+      </div>
+      <div class="g4" style="margin-bottom:18px">
+        ${kpiCard('','Critical',counts.Critical,'','','Require immediate action',undefined,undefined,'var(--err)')}
+        ${kpiCard('','Warnings',counts.Warning,'','','Review recommended',undefined,undefined,'var(--warn)')}
+        ${kpiCard('','Info',counts.Info,'','','Informational',undefined,undefined,'var(--a1)')}
+        ${kpiCard('','Dismissed',ANOMALIES.filter(a=>a.dismissed).length,'','','Resolved this session',undefined,undefined,'var(--t3)')}
+      </div>
+      <div class="dc" style="margin-bottom:14px">
+        <div class="dchd"><span class="dctitle">Severity Breakdown</span></div>
+        <div class="dcbody">${svgBar([
+          {label:'Critical',v:counts.Critical,color:'var(--err)'},{label:'Warning',v:counts.Warning,color:'var(--warn)'},{label:'Info',v:counts.Info,color:'var(--a1)'},
+        ],{w:440,h:120})}</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;align-items:center">
+        <span style="font-size:10px;color:var(--t3);font-weight:700">FILTER:</span>
+        ${['All','Critical','Warning','Info'].map(f=>`<div class="period-btn${anomalyFilter===f?' on':''}" onclick="setAnomalyFilter('${f}')">${f}</div>`).join('')}
+      </div>
+      <div id="anomalyList">
+        ${visible.map(a=>`
+          <div class="ac ${a.cls}" id="anomaly-${a.id}">
+            <div class="ac-icon">${a.icon}</div>
+            <div style="flex:1">
+              <div class="ac-title">${a.title} <span style="font-size:9px;color:var(--t3);font-weight:400;margin-left:6px">${a.sev.toUpperCase()}</span></div>
+              <div class="ac-text">${a.text}</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-shrink:0;align-items:flex-start">
+              <button class="tbar-btn" onclick="toast('${a.action} initiated for anomaly ${a.id}','inf')" style="font-size:10px;padding:3px 9px">${a.action}</button>
+              <button class="tbar-btn" onclick="dismissAnomaly(${a.id})" style="font-size:10px;padding:3px 9px;color:var(--t3)">Dismiss</button>
+            </div>
+          </div>`).join('')}
+        ${visible.length===0?'<div style="padding:20px;text-align:center;color:var(--t3);font-size:13px">No anomalies matching filter</div>':''}
+      </div>
+    </div>`;
+  setTimeout(animateCounters, 100);
+}
+
+function dismissAnomaly(id){
+  const a = ANOMALIES.find(a=>a.id===id);
+  if(a){ a.dismissed=true; toast('Anomaly dismissed','ok'); renderAnomalies(); }
+}
+
+function setAnomalyFilter(f){ anomalyFilter=f; renderAnomalies(); }
+
+function rescanAnomalies(){
+  toast('Re-scanning Oracle Fusion for anomalies…','inf');
+  setTimeout(()=>{ toast('Scan complete — '+ANOMALIES.filter(a=>!a.dismissed).length+' anomalies found','ok'); }, 1800);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 7: CALENDAR (keep existing, make interactive)
+// ════════════════════════════════════════════════════════════════════════════
+function renderCalendar(){
+  document.getElementById('dv-calendar').innerHTML = `
+    <div style="padding:18px 20px;overflow-y:auto;flex:1;">
+      <div class="dhd"><h2>📅 Calendar & Periods</h2>
+        <div class="dhd-r"><button class="ref-btn" onclick="renderCalendar()">↻ Refresh</button>${liveTag()}</div>
+      </div>
+      <div class="dc"><div class="dchd"><span class="dctitle">McAfee 445 Monthly Calendar · FY2019</span></div>
+        <div style="overflow:auto"><table class="dtbl" id="calTbl">
+          <thead><tr><th>Period Name</th><th>Period #</th><th>Start Date</th><th>End Date</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+          <tbody>
+            ${[['2019-01',1,'01-Jan-2019','31-Jan-2019','Monthly','Closed','b'],
+               ['2019-02',2,'01-Feb-2019','28-Feb-2019','Monthly','Closed','b'],
+               ['2019-03',3,'01-Mar-2019','31-Mar-2019','Monthly','Closed','b'],
+               ['2019-04',4,'01-Apr-2019','30-Apr-2019','Monthly','Open','g'],
+               ['2019-05',5,'01-May-2019','31-May-2019','Monthly','Future','e']].map(([n,num,s,e,t,st,c])=>
+              `<tr><td style="color:var(--t1);font-weight:600">${n}</td><td style="font-family:var(--mono)">${num}</td>
+              <td style="font-family:var(--mono)">${s}</td><td style="font-family:var(--mono)">${e}</td><td>${t}</td>
+              <td><span class="bp bp-${c}">${st}</span></td>
+              <td>${st==='Open'?'<button class="tbar-btn" onclick="toast(\'Period 2019-04 close initiated\',\'inf\')" style="font-size:9px;padding:2px 7px">Close</button>':''}</td></tr>`).join('')}
+          </tbody>
+        </table></div>
+      </div>
+    </div>`;
+  setTimeout(()=>makeSortable('calTbl'),100);
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// DASHBOARD 8: AI AGENT
+// ════════════════════════════════════════════════════════════════════════════
+const AGENT_CHIPS = [
+  'Show me this month\'s top 5 earners',
+  'Which comp plans have the most pending approvals?',
+  'Are there any anomalies I should know about?',
+  'Build me a dashboard for EMEA performance',
+  'What is the OTV trend for Q1 2026?',
+  'Which participants are below 60% attainment?',
+  'Compare earnings across business units',
+  'Show approval backlog by age',
+];
+
+function renderAgent(){
+  const el = document.getElementById('dv-agent');
+  el.innerHTML = `
+    <div class="agent-wrap">
+      <div style="padding:14px 20px;border-bottom:1px solid var(--b1);flex-shrink:0;background:var(--s1)">
+        <div style="font-size:15px;font-weight:800;letter-spacing:-.3px">✦ ICM AI Agent</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:2px">Ask anything about your ICM data — I'll query Oracle and build interactive dashboards in real time</div>
+      </div>
+      <div class="agent-msgs" id="agentMsgs">
+        <div class="agent-msg ai">
+          <div class="agent-avatar" style="background:var(--a5)22">✦</div>
+          <div class="agent-bubble">
+            <strong>Welcome to ICM AI Agent.</strong><br><br>
+            I can query your live Oracle Fusion ICM data, detect anomalies, build custom charts, and give you plain-English summaries of your compensation data.<br><br>
+            Try one of the suggestions below, or ask me anything about your ICM instance.
+          </div>
+        </div>
+      </div>
+      <div class="agent-chips" id="agentChips">
+        ${AGENT_CHIPS.slice(0,5).map(c=>`<div class="agent-chip" onclick="sendAgentMsg('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('')}
+      </div>
+      <div class="agent-input-row">
+        <input class="agent-inp" id="agentInp" placeholder="Ask about your ICM data… e.g. Show me top earners in EMEA this quarter" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAgentMsg()}">
+        <button class="agent-send" onclick="sendAgentMsg()">Send ↑</button>
+      </div>
+    </div>`;
+}
+
+async function sendAgentMsg(preset){
+  const inp = document.getElementById('agentInp');
+  const msg = preset || inp?.value.trim();
+  if(!msg) return;
+  if(inp) inp.value = '';
+
+  const msgs = document.getElementById('agentMsgs');
+
+  // User bubble
+  msgs.innerHTML += `<div class="agent-msg user">
+    <div class="agent-avatar">👤</div>
+    <div class="agent-bubble">${msg}</div>
+  </div>`;
+
+  // Thinking bubble
+  const thinkId = 'think-'+Date.now();
+  msgs.innerHTML += `<div class="agent-msg ai" id="${thinkId}">
+    <div class="agent-avatar" style="background:var(--a5)22">✦</div>
+    <div class="agent-bubble"><div style="display:flex;align-items:center;gap:8px;color:var(--t3)"><div class="spin go"></div> Analysing your ICM data…</div></div>
+  </div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  if(!ST.apiKey){
+    document.getElementById(thinkId).outerHTML = `<div class="agent-msg ai">
+      <div class="agent-avatar" style="background:var(--a5)22">✦</div>
+      <div class="agent-bubble">I need an Anthropic API key to analyse your data. Add it in the Connection settings (top right).</div>
+    </div>`;
+    msgs.scrollTop = msgs.scrollHeight;
+    return;
+  }
+
+  const systemPrompt = `You are an Oracle ICM AI Agent embedded in RealICM, a real-time analytics tool for Oracle Fusion Incentive Compensation Management.
+
+The user is connected to: ${ST.conn ? ST.url : 'Demo mode (not connected)'}.
+Current period: ${DS.period}.
+Known BUs: McAfee Enterprise LE BU (300000001870282), McAfee BU (300000002594180), McAfee Corp BU (300000002781680).
+
+You can:
+1. Answer questions about ICM data using realistic McAfee demo data
+2. Generate SQL queries for Oracle Fusion ICM tables
+3. Identify anomalies and give recommendations
+4. Build inline HTML charts using only inline SVG (no external libraries)
+
+When asked to show data, ALWAYS include a compact SVG bar chart or table.
+Keep responses concise and actionable. Use HTML formatting in your response.
+For charts, use simple inline SVG with viewBox, polyline, rect elements.
+Use CSS vars: --a1 (#4dabf7 blue), --a3 (#51cf66 green), --a5 (#cc5de8 purple), --ok (#2ed573), --warn (#ffa502), --err (#ff4757), --t1/#t2/#t3 for text.`;
+
+  const response = await callAI(systemPrompt + '\n\nUser: ' + msg, 1200);
+
+  document.getElementById(thinkId).outerHTML = `<div class="agent-msg ai">
+    <div class="agent-avatar" style="background:var(--a5)22">✦</div>
+    <div class="agent-bubble">${response || 'Sorry, I could not process that request.'}</div>
+  </div>`;
+
+  // Update chips with related questions
+  const chips = document.getElementById('agentChips');
+  if(chips){
+    const related = AGENT_CHIPS.filter(c=>!c.includes(msg.substring(0,10))).slice(0,4);
+    chips.innerHTML = related.map(c=>`<div class="agent-chip" onclick="sendAgentMsg('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Also update anomaly badge
+  const anomalyItem = document.querySelector('.dn-item[onclick*="anomalies"]');
+  if(anomalyItem && !anomalyItem.querySelector('.badge')){
+    const count = ANOMALIES.filter(a=>!a.dismissed&&a.sev==='Critical').length;
+    if(count) anomalyItem.innerHTML += ` <span style="background:var(--err);color:#fff;border-radius:8px;padding:1px 5px;font-size:9px;font-weight:700">${count}</span>`;
+  }
+}
+
+// ── RE-INIT: override switchDash to use new renders ──────────────────────
+const _dashFns={overview:renderOverview,seller:renderSeller,plans:renderPlans,earnings:renderEarnings,approvals:renderApprovals,anomalies:renderAnomalies,calendar:renderCalendar,agent:renderAgent};
+function switchDash(name,el){
+  document.querySelectorAll('.dn-item').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.dv').forEach(v=>v.classList.remove('on'));
+  const dv=document.getElementById('dv-'+name);
+  dv.classList.add('on');
+  // Always re-render dashboards so period changes take effect
+  if(_dashFns[name]) _dashFns[name]();
+}
+
+
+// ════════════════════════════════════════════════════════
+// MULTI-TAB SYSTEM
+// ════════════════════════════════════════════════════════
+const TABS = [{id:0, label:'Query 1', sql:'', scrollTop:0}];
+let activeTab = 0;
+let tabCounter = 1;
+
+function switchTab(id){
+  // Save current SQL
+  const cur = TABS.find(t=>t.id===activeTab);
+  if(cur){ cur.sql = document.getElementById('sqled').value; cur.scrollTop = document.getElementById('sqled').scrollTop; }
+  activeTab = id;
+  // Load new tab
+  const tab = TABS.find(t=>t.id===id);
+  if(!tab) return;
+  document.getElementById('sqled').value = tab.sql;
+  document.getElementById('sqled').scrollTop = tab.scrollTop;
+  updateLnums();
+  document.querySelectorAll('.qtab').forEach(el=>el.classList.remove('active'));
+  const el = document.getElementById('tab-'+id);
+  if(el) el.classList.add('active');
+  // Clear results
+  document.getElementById('resArea').innerHTML='<div class="empty"><div class="empty-ico">⚡</div><div class="empty-t">Ready</div></div>';
+  document.getElementById('resCnt').textContent='';
+  document.getElementById('resTm').textContent='';
+  document.getElementById('resStat').textContent='';
+  document.getElementById('filtBar').style.display='none';
+  document.getElementById('btnCsv').disabled=true;
+  document.getElementById('btnJson').disabled=true;
+  document.getElementById('btnXls').disabled=true;
+  document.getElementById('btnExplain').disabled=true;
+}
+
+function addTab(){
+  const cur = TABS.find(t=>t.id===activeTab);
+  if(cur) cur.sql = document.getElementById('sqled').value;
+  tabCounter++;
+  const id = tabCounter;
+  TABS.push({id, label:'Query '+tabCounter, sql:'', scrollTop:0});
+  const bar = document.getElementById('tabs');
+  const addBtn = bar.querySelector('.qtab-add');
+  const div = document.createElement('div');
+  div.className = 'qtab';
+  div.id = 'tab-'+id;
+  div.innerHTML = `<span id="tab-label-${id}">Query ${tabCounter}</span><span class="qtab-x" onclick="event.stopPropagation();closeTab(${id})">✕</span>`;
+  div.onclick = () => switchTab(id);
+  bar.insertBefore(div, addBtn);
+  switchTab(id);
+}
+
+function closeTab(id){
+  if(TABS.length===1){ toast('Need at least one tab','inf'); return; }
+  const idx = TABS.findIndex(t=>t.id===id);
+  TABS.splice(idx,1);
+  document.getElementById('tab-'+id)?.remove();
+  if(activeTab===id) switchTab(TABS[Math.max(0,idx-1)].id);
+}
+
+function renameTab(id){
+  const label = prompt('Tab name:', document.getElementById('tab-label-'+id)?.textContent);
+  if(label){ 
+    const el = document.getElementById('tab-label-'+id);
+    if(el) el.textContent = label;
+    const tab = TABS.find(t=>t.id===id);
+    if(tab) tab.label = label;
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// SQL FORMATTER
+// ════════════════════════════════════════════════════════
+function formatSQL(){
+  const ed = document.getElementById('sqled');
+  let sql = ed.value.trim();
+  if(!sql){ toast('Nothing to format','inf'); return; }
+  
+  // Keywords to uppercase + newline
+  const kw = ['SELECT','FROM','WHERE','JOIN','LEFT JOIN','RIGHT JOIN','INNER JOIN','OUTER JOIN',
+    'ON','AND','OR','NOT','IN','EXISTS','BETWEEN','LIKE','IS NULL','IS NOT NULL',
+    'GROUP BY','ORDER BY','HAVING','LIMIT','UNION','INTERSECT','MINUS','WITH',
+    'INSERT INTO','UPDATE','DELETE','CREATE','DROP','ALTER','CASE','WHEN','THEN','ELSE','END',
+    'DISTINCT','AS','BY','ASC','DESC','ROWNUM','TRUNC','DECODE','NVL','NVL2'];
+  
+  // Normalise whitespace
+  sql = sql.replace(/\t/g,'  ').replace(/\r?\n/g,' ').replace(/\s+/g,' ');
+  
+  // Uppercase keywords
+  kw.forEach(k => {
+    sql = sql.replace(new RegExp('\\b'+k+'\\b','gi'), k);
+  });
+  
+  // Break on major clauses
+  const breaks = ['SELECT','FROM','WHERE','GROUP BY','ORDER BY','HAVING','LEFT JOIN',
+    'RIGHT JOIN','INNER JOIN','JOIN','UNION','WITH'];
+  breaks.forEach(k => {
+    sql = sql.replace(new RegExp('\\s+'+k+'\\b','g'), '\n'+k);
+  });
+  
+  // Indent AND/OR
+  sql = sql.replace(/\n(AND|OR) /g,'\n  $1 ');
+  
+  // Indent SELECT columns — split on comma
+  sql = sql.replace(/SELECT (.+?) FROM/, (m, cols) => {
+    const items = cols.split(',').map(c=>c.trim());
+    if(items.length > 1) return 'SELECT\n  ' + items.join(',\n  ') + '\nFROM';
+    return m;
+  });
+  
+  ed.value = sql.trim();
+  updateLnums();
+  toast('SQL formatted','ok');
+}
+
+// ════════════════════════════════════════════════════════
+// EXPLAIN PLAN (AI-powered)
+// ════════════════════════════════════════════════════════
+async function explainSQL(){
+  const sql = document.getElementById('sqled').value.trim();
+  if(!sql){ toast('No SQL to explain','inf'); return; }
+  if(!ST.apiKey){ toast('Add Anthropic API key for AI explain','err'); return; }
+  
+  const area = document.getElementById('resArea');
+  area.innerHTML = '<div style="padding:20px;display:flex;align-items:center;gap:10px;color:var(--t3);font-size:12px"><div class="spin go"></div> Generating explain plan…</div>';
+  
+  const prompt = `Explain this Oracle Fusion ICM SQL query. Be concise and technical.
+SQL:
+${sql}
+
+Format your response as:
+INTENT: (one line — what this query does)
+TABLES: (list each table and its role)
+JOINS: (describe join logic)
+PERFORMANCE NOTES: (indexes, full table scans, rownum filters)
+ORACLE ICM NOTES: (any ICM-specific table or column insights)
+
+Keep each section to 1-3 lines max.`;
+  
+  const text = await callAI(prompt, 800);
+  if(!text){ area.innerHTML='<div style="padding:16px;color:var(--err)">Explain failed</div>'; return; }
+  
+  area.innerHTML = `<div style="padding:16px;">
+    <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚡ AI Explain Plan</div>
+    <pre class="explain-out">${text}</pre>
+  </div>`;
+  toast('Explain complete','ok');
+}
+
+// ════════════════════════════════════════════════════════
+// SCHEMA COLUMN DETAIL
+// ════════════════════════════════════════════════════════
+const SCH_DETAIL = {
+  'CN_COMP_PLANS_ALL_VL': [
+    {n:'COMP_PLAN_ID',t:'NUMBER(18)',pk:true,d:'Primary key'},
+    {n:'COMP_PLAN_NAME',t:'VARCHAR2(80)',d:'Internal plan name'},
+    {n:'DISPLAY_NAME',t:'VARCHAR2(80)',d:'UI display name'},
+    {n:'DESCRIPTION',t:'VARCHAR2(240)',d:'Plan description'},
+    {n:'ORG_ID',t:'NUMBER(18)',fk:'BU',d:'Business Unit ID'},
+    {n:'START_DATE',t:'DATE',d:'Plan effective start'},
+    {n:'END_DATE',t:'DATE',d:'Plan effective end'},
+    {n:'STATUS_CODE',t:'VARCHAR2(30)',d:'ACTIVE / INACTIVE'},
+    {n:'CREATED_BY',t:'VARCHAR2(64)',d:'Creator username'},
+    {n:'LAST_UPDATE_DATE',t:'DATE',d:'Last modified'},
+  ],
+  'CN_SRP_PARTICIPANTS_ALL': [
+    {n:'PARTICIPANT_ID',t:'NUMBER(18)',pk:true,d:'Primary key'},
+    {n:'PARTICIPANT_NAME',t:'VARCHAR2(240)',d:'Full name'},
+    {n:'PARTY_NUMBER',t:'VARCHAR2(30)',d:'WWID / employee number'},
+    {n:'PARTY_ID',t:'NUMBER(18)',fk:'HZ_PARTIES',d:'CRM party reference'},
+    {n:'ORG_ID',t:'NUMBER(18)',fk:'BU',d:'Business Unit ID'},
+    {n:'START_DATE_ACTIVE',t:'DATE',d:'Participant active start'},
+    {n:'END_DATE_ACTIVE',t:'DATE',d:'Participant active end'},
+  ],
+  'CN_SRP_PARTICIPANT_DETAILS_ALL': [
+    {n:'PARTICIPANT_DETAIL_ID',t:'NUMBER(18)',pk:true,d:'PK'},
+    {n:'PARTICIPANT_ID',t:'NUMBER(18)',fk:'CN_SRP_PARTICIPANTS_ALL',d:'FK to participant'},
+    {n:'ATTRIBUTE_NUMBER2',t:'NUMBER',d:'OTV (On-Target Variable)'},
+    {n:'ATTRIBUTE_NUMBER1',t:'NUMBER',d:'Annual base salary'},
+    {n:'ATTRIBUTE_CHAR8',t:'VARCHAR2(150)',d:'Comp role display name'},
+    {n:'ATTRIBUTE_CHAR10',t:'VARCHAR2(150)',d:'Manager L1'},
+    {n:'ATTRIBUTE_CHAR12',t:'VARCHAR2(150)',d:'Region'},
+    {n:'ATTRIBUTE_CHAR13',t:'VARCHAR2(150)',d:'Sub-region'},
+    {n:'ATTRIBUTE_CHAR14',t:'VARCHAR2(150)',d:'Position title'},
+    {n:'CURRENCY_CODE',t:'VARCHAR2(15)',d:'Participant home currency'},
+    {n:'COST_CENTER',t:'VARCHAR2(60)',d:'Cost center code'},
+    {n:'COUNTRY_CODE',t:'VARCHAR2(2)',d:'ISO country code'},
+  ],
+  'CN_TP_EARNINGS_ALL': [
+    {n:'EARNING_ID',t:'NUMBER(18)',pk:true,d:'PK'},
+    {n:'PARTICIPANT_ID',t:'NUMBER(18)',fk:'CN_SRP_PARTICIPANTS_ALL',d:'FK participant'},
+    {n:'COMP_PLAN_ID',t:'NUMBER(18)',fk:'CN_COMP_PLANS_ALL_VL',d:'FK comp plan'},
+    {n:'PERIOD_ID',t:'NUMBER(18)',fk:'CN_PERIODS_B',d:'FK period'},
+    {n:'INPUT_ACHIEVED_PTD',t:'NUMBER',d:'Input achieved period-to-date'},
+    {n:'OUTPUT_ACHIEVED_PTD',t:'NUMBER',d:'Commission earned PTD'},
+    {n:'INPUT_ACHIEVED_ITD',t:'NUMBER',d:'Input achieved inception-to-date'},
+    {n:'OUTPUT_ACHIEVED_ITD',t:'NUMBER',d:'Commission earned ITD'},
+    {n:'CURRENCY_CODE',t:'VARCHAR2(15)',d:'Currency'},
+  ],
+  'CN_SRP_SUBLEDGER_ALL': [
+    {n:'PARTICIPANT_ID',t:'NUMBER(18)',fk:'CN_SRP_PARTICIPANTS_ALL',d:'FK participant'},
+    {n:'PERIOD_ID',t:'NUMBER(18)',d:'Period reference'},
+    {n:'BALANCE1_DTD',t:'NUMBER',d:'All payments DTD'},
+    {n:'BALANCE1_CTD',t:'NUMBER',d:'Recoveries this month'},
+    {n:'BALANCE2_DTD',t:'NUMBER',d:'Current month earnings'},
+    {n:'BALANCE2_BBD',t:'NUMBER',d:'Beginning balance debit'},
+    {n:'BALANCE2_BBC',t:'NUMBER',d:'Beginning balance credit'},
+    {n:'BALANCE4_DTD',t:'NUMBER',d:'Recoverable adjustments'},
+    {n:'BALANCE5_DTD',t:'NUMBER',d:'Non-recoverable adjustments'},
+    {n:'EARNING_TYPE_ID',t:'NUMBER',d:'-1000 = standard'},
+    {n:'CURRENCY_CODE',t:'VARCHAR2(15)',d:'Currency'},
+  ],
+};
+
+function openSchema(tbl){
+  const panel = document.getElementById('schemaPanel');
+  const cols  = document.getElementById('schemaCols');
+  const title = document.getElementById('schemaTblName');
+  title.textContent = tbl;
+  const defs = SCH_DETAIL[tbl];
+  if(!defs){ cols.innerHTML='<div style="padding:10px;font-size:11px;color:var(--t3)">No column detail available</div>'; }
+  else {
+    cols.innerHTML = defs.map(c=>`
+      <div class="col-row" onclick="insertCol('${c.n}')">
+        <div class="col-nm">
+          ${c.pk?'<span class="cbadge cb-pk">PK</span>':''}
+          ${c.fk?'<span class="cbadge cb-fk">FK</span>':''}
+          ${c.n}
+        </div>
+        <div class="col-tp">${c.t}</div>
+        <div class="col-ds">${c.d}</div>
+      </div>`).join('');
+  }
+  panel.classList.add('open');
+}
+
+function closeSchema(){
+  document.getElementById('schemaPanel').classList.remove('open');
+}
+
+function insertCol(colName){
+  const ed = document.getElementById('sqled');
+  const start = ed.selectionStart;
+  const before = ed.value.substring(0, start);
+  const after  = ed.value.substring(ed.selectionEnd);
+  ed.value = before + colName + after;
+  ed.selectionStart = ed.selectionEnd = start + colName.length;
+  ed.focus();
+  updateLnums();
+  toast('Column inserted','inf');
+}
+
+// ════════════════════════════════════════════════════════
+// QUERY HISTORY
+// ════════════════════════════════════════════════════════
+let HISTORY = [];
+try{ HISTORY = JSON.parse(localStorage.getItem('ricm_hist')||'[]'); }catch(e){}
+
+function addHistory(sql){
+  const entry = { id: Date.now(), sql: sql.slice(0,200), ts: new Date().toLocaleTimeString() };
+  HISTORY.unshift(entry);
+  if(HISTORY.length > 20) HISTORY = HISTORY.slice(0,20);
+  try{ localStorage.setItem('ricm_hist', JSON.stringify(HISTORY)); }catch(e){}
+  buildHistory();
+}
+
+function buildHistory(){
+  const list = document.getElementById('histList');
+  if(!list) return;
+  if(!HISTORY.length){
+    list.innerHTML='<div style="padding:8px 12px;font-size:10px;color:var(--t3);font-style:italic">No recent queries</div>';
+    return;
+  }
+  list.innerHTML = HISTORY.slice(0,8).map(h=>`
+    <div class="hist-row" onclick="loadHist(${h.id})">
+      <div class="hist-nm">${h.sql.replace(/\n/g,' ').substring(0,50)}</div>
+      <div class="hist-ts">${h.ts}</div>
+      <div class="hist-del" onclick="event.stopPropagation();deleteHist(${h.id})">✕</div>
+    </div>`).join('');
+}
+
+function loadHist(id){
+  const h = HISTORY.find(h=>h.id===id);
+  if(!h) return;
+  document.getElementById('sqled').value = h.sql;
+  updateLnums();
+  toast('Query loaded','inf');
+}
+
+function deleteHist(id){
+  HISTORY = HISTORY.filter(h=>h.id!==id);
+  try{ localStorage.setItem('ricm_hist',JSON.stringify(HISTORY)); }catch(e){}
+  buildHistory();
+}
+
+// ════════════════════════════════════════════════════════
+// ROW DETAIL DRAWER
+// ════════════════════════════════════════════════════════
+function openRowDetail(rowData, cols, rowNum){
+  document.getElementById('rdTitle').textContent = 'Row ' + rowNum + ' Detail';
+  document.getElementById('rdSub').textContent = cols.length + ' columns';
+  document.getElementById('rdGrid').innerHTML = cols.map((c,i)=>`
+    <div class="rd-field" onclick="navigator.clipboard.writeText('${(rowData[i]||'').toString().replace(/'/g,"\\'")}');toast('Copied','ok')">
+      <div class="rd-label">${c}</div>
+      <div class="rd-value">${rowData[i]??'<span style=\"color:var(--t3);font-style:italic\">NULL</span>'}</div>
+    </div>`).join('');
+  document.getElementById('rdOverlay').classList.add('open');
+}
+
+function closeRowDetail(){
+  document.getElementById('rdOverlay').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════
+// COPY CELL ON CLICK
+// ════════════════════════════════════════════════════════
+document.addEventListener('dblclick', e=>{
+  const td = e.target.closest('td');
+  if(!td || td.classList.contains('rn')) return;
+  navigator.clipboard.writeText(td.textContent||'').then(()=>toast('Copied','ok'));
+});
+
+// ════════════════════════════════════════════════════════
+// INIT — after all functions are defined
+// ════════════════════════════════════════════════════════
+buildTbls();
+buildLib();
+initConn();
+updateLnums();
+buildHistory();
+renderOverview();
+
 </script>
 </body>
 </html>
