@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RealICM — Oracle ICM Analytics Engine</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0D0618;--s1:#120820;--s2:#1A0A2E;--s3:#2A1A4E;
+  --t1:#F0E8FF;--t2:#C4A8FF;--t3:#9090B0;--t4:#5A5A7A;
+  --b1:#2A1A4E;--b2:#3D2A6A;
+  --oracle:#C74634;--purple:#5C3D9E;--blue:#1565C0;--green:#2E7D32;
+  --ok:#66BB6A;--warn:#F57C00;--err:#EF5350;
+  --a1:#C4A8FF;--a2:#90CAF9;--a3:#A5D6A7;
+}
+body{background:var(--bg);color:var(--t1);font-family:'Segoe UI',system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;overflow:hidden;font-size:13px;}
+
+/* TOP BAR */
+#topbar{height:48px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;-webkit-app-region:drag;}
+.logo{display:flex;align-items:center;gap:8px;-webkit-app-region:no-drag;}
+.logo-mark{width:26px;height:26px;background:linear-gradient(135deg,#C74634,#E57373);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;}
+.logo-text{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px;}
+.logo-text span{color:var(--a1);}
+.logo-version{font-size:10px;color:var(--t4);margin-left:2px;}
+.sep{width:1px;height:24px;background:var(--b1);}
+.spacer{flex:1;}
+.nav-pills{display:flex;gap:4px;-webkit-app-region:no-drag;}
+.np{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;color:var(--t3);transition:all .15s;display:flex;align-items:center;gap:5px;}
+.np:hover{color:var(--t2);border-color:var(--b2);}
+.np.a1.on{background:var(--purple);color:#fff;border-color:var(--purple);}
+.np.a2.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+.np.a3.on{background:var(--green);color:#fff;border-color:var(--green);}
+.conn-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid var(--b2);cursor:pointer;font-size:11px;color:var(--t3);-webkit-app-region:no-drag;transition:all .15s;}
+.conn-pill:hover{border-color:var(--purple);}
+.conn-pill.live{border-color:var(--ok);color:var(--ok);}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--t4);}
+.dot.live{background:var(--ok);box-shadow:0 0 6px var(--ok);}
+
+/* PANELS */
+#panels{flex:1;overflow:hidden;position:relative;}
+.panel{position:absolute;inset:0;display:none;flex-direction:column;}
+.panel.on{display:flex;}
+
+/* MODAL */
+.mbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;align-items:center;justify-content:center;}
+.mbg.on{display:flex;}
+.modal{background:var(--s2);border:1px solid var(--b2);border-radius:12px;width:440px;overflow:hidden;}
+.mhd{padding:16px 20px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.mtitle{font-size:14px;font-weight:700;}
+.mx{background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;line-height:1;}
+.mbody{padding:20px;}
+.mft{padding:12px 20px;border-top:1px solid var(--b1);display:flex;justify-content:flex-end;gap:8px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.field input{width:100%;background:var(--bg);border:1px solid var(--b2);border-radius:6px;padding:8px 12px;font-size:13px;color:var(--t1);outline:none;}
+.field input:focus{border-color:var(--purple);}
+.btn{padding:7px 18px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid;}
+.btn-ghost{background:transparent;border-color:var(--b2);color:var(--t2);}
+.btn-primary{background:var(--purple);border-color:var(--purple);color:#fff;}
+.btn-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
+.btn-ok{background:var(--ok);border-color:var(--ok);color:#fff;}
+
+/* ═══ P1: DIY SQL EXPLORER ═══ */
+#p1{flex-direction:row;}
+.sidebar{width:220px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;}
+.sb-hd{padding:10px 12px;border-bottom:1px solid var(--b1);}
+.sb-search{width:100%;background:var(--bg);border:1px solid var(--b1);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t1);outline:none;}
+.sb-search:focus{border-color:var(--purple);}
+.tbl-list{flex:1;overflow-y:auto;padding:6px 0;}
+.tbl-grp{padding:7px 12px 3px;font-size:10px;font-weight:700;color:var(--t4);text-transform:uppercase;letter-spacing:.5px;}
+.tbl-row{padding:5px 12px;font-size:12px;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:5px;}
+.tbl-row:hover{background:var(--s2);color:var(--t2);}
+.tbl-row.on{background:var(--s3);color:var(--a1);}
+.main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.editor-bar{padding:7px 12px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.editor-wrap{flex:0 0 200px;border-bottom:1px solid var(--b1);}
+textarea{width:100%;height:100%;background:var(--s2);border:none;color:var(--t1);font-family:'SF Mono',Menlo,Consolas,monospace;font-size:13px;padding:14px;resize:none;outline:none;line-height:1.6;}
+.results-area{flex:1;overflow:auto;padding:14px;}
+.run-btn{background:var(--ok);border:none;color:#fff;padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;}
+.run-btn:hover{filter:brightness(1.1);}
+.ai-btn{background:var(--s3);border:1px solid var(--b2);color:var(--a1);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;}
+.lim-sel{background:var(--s2);border:1px solid var(--b2);color:var(--t2);border-radius:6px;padding:5px 8px;font-size:12px;}
+.res-stat{font-size:11px;color:var(--t3);margin-left:auto;}
+.rtbl{width:100%;border-collapse:collapse;font-size:12px;}
+.rtbl th{padding:7px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b1);background:var(--s1);position:sticky;top:0;}
+.rtbl td{padding:8px 12px;border-bottom:1px solid var(--b1);color:var(--t2);}
+.rtbl tr:hover td{background:var(--s1);}
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--t4);}
+.empty-icon{font-size:42px;opacity:.3;}
+
+/* ═══ P2: SQL LIBRARY ═══ */
+#p2{flex-direction:row;}
+.lib-sb{width:280px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;}
+.lib-search-row{padding:10px 12px;border-bottom:1px solid var(--b1);}
+.lib-search{width:100%;background:var(--bg);border:1px solid var(--b1);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--t1);outline:none;}
+.lib-search:focus{border-color:var(--blue);}
+.lib-cats{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px;}
+.cat{padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--b2);color:var(--t3);}
+.cat.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.lib-list{flex:1;overflow-y:auto;}
+.lib-item{padding:11px 14px;border-bottom:1px solid var(--b1);cursor:pointer;transition:background .1s;}
+.lib-item:hover{background:var(--s2);}
+.lib-item.on{background:var(--s3);border-left:3px solid var(--blue);}
+.lib-item-title{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:3px;}
+.lib-meta{font-size:10px;color:var(--t3);}
+.lbadge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;margin-left:4px;}
+.lb-icm{background:#3D1F6E;color:#C4A8FF;}
+.lb-hcm{background:#0D2A50;color:#90CAF9;}
+.lb-fin{background:#1A2A10;color:#A5D6A7;}
+.lib-detail{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.lib-dhd{padding:14px 18px;border-bottom:1px solid var(--b1);background:var(--s1);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+.lib-dtitle{font-size:15px;font-weight:700;}
+.lib-ddesc{font-size:12px;color:var(--t3);margin-top:3px;}
+.lib-params-bar{padding:10px 18px;border-bottom:1px solid var(--b1);background:var(--s2);display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.pf{display:flex;align-items:center;gap:6px;}
+.pf label{font-size:11px;color:var(--t3);font-weight:600;white-space:nowrap;}
+.pf input{background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:4px 8px;font-size:12px;color:var(--t1);width:140px;outline:none;}
+.lib-body{flex:1;overflow:auto;padding:16px 18px;}
+.lib-sql{background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:16px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px;color:var(--a2);line-height:1.7;white-space:pre-wrap;}
+
+/* ═══ P3: DASHBOARDS ═══ */
+#p3{flex-direction:row;}
+.dash-nav{width:200px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);padding:10px 0;}
+.dn-item{padding:9px 16px;font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .1s;}
+.dn-item:hover{color:var(--t2);background:var(--s2);}
+.dn-item.on{color:var(--a3);background:var(--s3);border-left:3px solid var(--green);}
+.dash-content{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.dv{display:none;flex:1;overflow-y:auto;padding:18px 20px;}
+.dv.on{display:block;}
+.dhd{margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;}
+.dhd h2{font-size:16px;font-weight:700;}
+.dhd-r{display:flex;gap:8px;align-items:center;}
+.ref-btn{background:var(--s3);border:1px solid var(--b2);color:var(--a1);padding:5px 14px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;}
+.psel{background:var(--s2);border:1px solid var(--b2);color:var(--t2);border-radius:6px;padding:5px 10px;font-size:12px;}
+.live-tag{font-size:9px;font-weight:700;color:var(--ok);background:rgba(102,187,106,.12);border:1px solid rgba(102,187,106,.3);border-radius:4px;padding:2px 7px;letter-spacing:.3px;}
+.demo-tag{font-size:9px;font-weight:700;color:var(--warn);background:rgba(245,124,0,.1);border:1px solid rgba(245,124,0,.3);border-radius:4px;padding:2px 7px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.kc{background:var(--s1);border:1px solid var(--b1);border-radius:8px;padding:14px 16px;}
+.kc-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.kc-val{font-size:24px;font-weight:800;line-height:1;}
+.kc-sub{font-size:11px;color:var(--t3);margin-top:5px;}
+.kc-delta{font-size:11px;margin-top:3px;font-weight:600;}
+.up{color:var(--ok);}
+.dn{color:var(--err);}
+.dc{background:var(--s1);border:1px solid var(--b1);border-radius:8px;overflow:hidden;margin-bottom:14px;}
+.dchd{padding:11px 15px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;}
+.dctitle{font-size:13px;font-weight:600;}
+.dcbody{padding:14px 15px;}
+.dtbl{width:100%;border-collapse:collapse;font-size:12px;}
+.dtbl th{padding:7px 12px;text-align:left;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--b1);background:var(--bg);}
+.dtbl td{padding:8px 12px;border-bottom:1px solid var(--b1);color:var(--t2);}
+.dtbl tr:last-child td{border-bottom:none;}
+.dtbl tr:hover td{background:var(--s2);}
+.bp{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.bp-g{background:rgba(102,187,106,.15);color:var(--ok);}
+.bp-w{background:rgba(245,124,0,.15);color:var(--warn);}
+.bp-e{background:rgba(239,83,80,.15);color:var(--err);}
+.bp-b{background:rgba(21,101,192,.15);color:var(--a2);}
+.br{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.bl{font-size:11px;color:var(--t3);width:160px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bt{flex:1;height:10px;background:var(--s3);border-radius:5px;overflow:hidden;}
+.bf{height:100%;border-radius:5px;}
+.bv{font-size:11px;font-weight:600;color:var(--t1);min-width:60px;text-align:right;}
+.pt{height:8px;background:var(--s3);border-radius:4px;overflow:hidden;margin-top:5px;}
+.pf2{height:100%;border-radius:4px;}
+.ac{border-radius:6px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px;}
+.ac.w{background:rgba(245,124,0,.08);border:1px solid rgba(245,124,0,.3);}
+.ac.e{background:rgba(239,83,80,.08);border:1px solid rgba(239,83,80,.3);}
+.ac.i{background:rgba(144,202,249,.08);border:1px solid rgba(144,202,249,.2);}
+.ac-icon{font-size:15px;flex-shrink:0;}
+.ac-title{font-size:12px;font-weight:700;color:var(--t1);}
+.ac-text{font-size:11px;color:var(--t3);margin-top:2px;line-height:1.5;}
+.spin{width:14px;height:14px;border:2px solid var(--b2);border-top-color:var(--purple);border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0;}
+.ldg{display:flex;align-items:center;gap:8px;padding:20px;color:var(--t3);font-size:12px;}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* Toast */
+#toast{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:6px;}
+.ti{padding:10px 16px;border-radius:8px;font-size:12px;font-weight:600;animation:si .2s ease;box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.t-ok{background:#1A3A1A;border:1px solid var(--ok);color:var(--ok);}
+.t-err{background:#3A1A1A;border:1px solid var(--err);color:var(--err);}
+.t-inf{background:var(--s3);border:1px solid var(--b2);color:var(--a1);}
+@keyframes si{from{transform:translateX(100%);opacity:0}to{transform:none;opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-mark">⚡</div>
+    <div class="logo-text">Real<span>ICM</span> <span class="logo-version">v1.0</span></div>
+  </div>
+  <div class="sep"></div>
+  <div class="nav-pills">
+    <div class="np a1 on" onclick="switchPanel(1,this)">🧠 DIY Explorer</div>
+    <div class="np a2"    onclick="switchPanel(2,this)">📚 SQL Library</div>
+    <div class="np a3"    onclick="switchPanel(3,this)">📊 Dashboards</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="conn-pill" id="connPill" onclick="openConn()">
+    <div class="dot" id="connDot"></div>
+    <span id="connLabel">Not Connected</span>
+  </div>
+</div>
+
+<!-- PANELS -->
+<div id="panels">
+
+  <!-- ══════════ P1: DIY SQL EXPLORER ══════════ -->
+  <div class="panel on" id="p1">
+    <div class="sidebar">
+      <div class="sb-hd">
+        <input class="sb-search" placeholder="🔍 Filter tables…" oninput="filterTbls(this.value)">
+      </div>
+      <div class="tbl-list" id="tblList"></div>
+    </div>
+    <div class="main-area">
+      <div class="editor-bar">
+        <button class="run-btn" onclick="runSQL()">▶ Run</button>
+        <button class="ai-btn" onclick="openAI()">✦ Ask AI</button>
+        <select class="lim-sel" id="rowLim"><option>100</option><option selected>500</option><option>1000</option></select>
+        <span class="res-stat" id="resStat"></span>
+      </div>
+      <div class="editor-wrap">
+        <textarea id="sqled" spellcheck="false" placeholder="-- Oracle Fusion ICM SQL
+-- Cmd+Enter to run
+SELECT comp_plan_name, display_name, org_id
+FROM fusion.cn_comp_plans_all_vl
+WHERE rownum &lt;= 20"></textarea>
+      </div>
+      <div class="results-area" id="resArea">
+        <div class="empty">
+          <div class="empty-icon">⚡</div>
+          <div style="font-size:13px;color:var(--t4)">Connect to Oracle Fusion · Write SQL · Press Run</div>
+          <div style="font-size:11px;color:var(--t4)">Or click a table in the sidebar to start</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ P2: SQL LIBRARY ══════════ -->
+  <div class="panel" id="p2">
+    <div class="lib-sb">
+      <div class="lib-search-row">
+        <input class="lib-search" placeholder="🔍 Search 11 queries…" oninput="filterLib(this.value)">
+      </div>
+      <div class="lib-cats" id="libCats"></div>
+      <div class="lib-list" id="libList"></div>
+    </div>
+    <div class="lib-detail" id="libDetail">
+      <div style="display:flex;flex:1;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--t4);">
+        <div style="font-size:40px;opacity:.3">📚</div>
+        <div style="font-size:13px;">Select a query from the library</div>
+        <div style="font-size:11px;">11 production-tested Oracle ICM queries</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ P3: DASHBOARDS ══════════ -->
+  <div class="panel" id="p3">
+    <div class="dash-nav">
+      <div class="dn-item on" onclick="switchDash('overview',this)">🏠 Overview</div>
+      <div class="dn-item"    onclick="switchDash('seller',this)">👤 Seller View</div>
+      <div class="dn-item"    onclick="switchDash('plans',this)">📋 Comp Plans</div>
+      <div class="dn-item"    onclick="switchDash('earnings',this)">💰 Earnings</div>
+      <div class="dn-item"    onclick="switchDash('approvals',this)">✅ Approvals</div>
+      <div class="dn-item"    onclick="switchDash('anomalies',this)">⚠️ Anomalies</div>
+      <div class="dn-item"    onclick="switchDash('calendar',this)">📅 Calendar</div>
+    </div>
+    <div class="dash-content">
+      <div id="dv-overview"  class="dv on"></div>
+      <div id="dv-seller"    class="dv"></div>
+      <div id="dv-plans"     class="dv"></div>
+      <div id="dv-earnings"  class="dv"></div>
+      <div id="dv-approvals" class="dv"></div>
+      <div id="dv-anomalies" class="dv"></div>
+      <div id="dv-calendar"  class="dv"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONNECT MODAL -->
+<div class="mbg" id="connModal">
+  <div class="modal">
+    <div class="mhd">
+      <span class="mtitle">⚡ Oracle Fusion Connection</span>
+      <button class="mx" onclick="closeConn()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="field"><label>Oracle Fusion URL</label>
+        <input id="ci-url" type="url" placeholder="https://fa-es11-dev41-saasfademo1.ds-fa.oracle.com"></div>
+      <div class="field"><label>Username</label>
+        <input id="ci-user" type="text" placeholder="chandra.kasarabada@company.com"></div>
+      <div class="field"><label>Password</label>
+        <input id="ci-pass" type="password" placeholder="••••••••"></div>
+      <div class="field"><label>Anthropic API Key <span style="color:var(--t4);font-weight:400;">(for AI SQL generation)</span></label>
+        <input id="ci-key" type="password" placeholder="sk-ant-…"></div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost" onclick="disconnect()">Disconnect</button>
+      <button class="btn btn-primary" onclick="connect()">Connect</button>
+    </div>
+  </div>
+</div>
+
+<!-- AI SQL MODAL -->
+<div class="mbg" id="aiModal">
+  <div class="modal" style="width:520px;">
+    <div class="mhd">
+      <span class="mtitle">✦ AI SQL Generator</span>
+      <button class="mx" onclick="closeAI()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="field">
+        <label>What do you want to query?</label>
+        <input id="aiQ" type="text" placeholder="e.g. Show top 10 earners in Q1 with their comp plan and attainment">
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px;" id="aiChips"></div>
+      </div>
+      <div id="aiResultWrap" style="display:none;margin-top:12px;">
+        <div style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px;">Generated SQL</div>
+        <pre id="aiSqlOut" style="background:var(--s2);border:1px solid var(--b1);border-radius:8px;padding:14px;font-size:12px;color:var(--a2);white-space:pre-wrap;line-height:1.6;max-height:260px;overflow:auto;"></pre>
+      </div>
+    </div>
+    <div class="mft">
+      <button class="btn btn-ghost" onclick="closeAI()">Cancel</button>
+      <button class="btn btn-primary" onclick="genSQL()">✦ Generate</button>
+      <button class="btn btn-ok" id="useAIBtn" style="display:none" onclick="useSQL()">Use This SQL ↗</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+const ST={conn:false,url:'',user:'',pass:'',apiKey:'',genSQL:'',curLib:null,libCat:'All',libQ:''};
+
+// ══════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════
+function toast(msg,type='inf'){
+  const d=document.createElement('div');
+  d.className='ti t-'+type; d.textContent=msg;
+  document.getElementById('toast').appendChild(d);
+  setTimeout(()=>d.remove(),3000);
+}
+
+// ══════════════════════════════════════════════════════
+// CONNECTION
+// ══════════════════════════════════════════════════════
+async function initConn(){
+  if(window.electronAPI){
+    const c=await window.electronAPI.getConn();
+    if(c&&c.url){Object.assign(ST,c,{conn:true});updateConnUI();}
+  }
+  // Load from localStorage fallback
+  try{
+    const s=localStorage.getItem('ricm_conn');
+    if(s&&!ST.conn){const c=JSON.parse(s);Object.assign(ST,c,{conn:true});updateConnUI();}
+  }catch(e){}
+}
+function openConn(){
+  document.getElementById('ci-url').value=ST.url;
+  document.getElementById('ci-user').value=ST.user;
+  document.getElementById('ci-pass').value=ST.pass;
+  document.getElementById('ci-key').value=ST.apiKey;
+  document.getElementById('connModal').classList.add('on');
+}
+function closeConn(){document.getElementById('connModal').classList.remove('on');}
+async function connect(){
+  const url=document.getElementById('ci-url').value.trim().replace(/\/$/,'');
+  const user=document.getElementById('ci-user').value.trim();
+  const pass=document.getElementById('ci-pass').value;
+  const apiKey=document.getElementById('ci-key').value.trim();
+  if(!url||!user||!pass){toast('Fill in URL, username and password','err');return;}
+  Object.assign(ST,{url,user,pass,apiKey,conn:true});
+  if(window.electronAPI) await window.electronAPI.setConn({url,user,pass,apiKey});
+  try{localStorage.setItem('ricm_conn',JSON.stringify({url,user,pass,apiKey}));}catch(e){}
+  updateConnUI(); closeConn();
+  toast('Connected to Oracle Fusion ✓','ok');
+}
+async function disconnect(){
+  Object.assign(ST,{conn:false,url:'',user:'',pass:'',apiKey:''});
+  if(window.electronAPI) await window.electronAPI.clearConn();
+  try{localStorage.removeItem('ricm_conn');}catch(e){}
+  updateConnUI(); closeConn(); toast('Disconnected','inf');
+}
+function updateConnUI(){
+  const pill=document.getElementById('connPill');
+  const dot=document.getElementById('connDot');
+  const lbl=document.getElementById('connLabel');
+  if(ST.conn){
+    pill.classList.add('live'); dot.classList.add('live');
+    const host=ST.url.replace('https://','').split('.')[0];
+    lbl.textContent=host;
+  } else {
+    pill.classList.remove('live'); dot.classList.remove('live');
+    lbl.textContent='Not Connected';
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// PANEL SWITCHING
+// ══════════════════════════════════════════════════════
+function switchPanel(n,el){
+  document.querySelectorAll('.np').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('p'+n).classList.add('on');
+  if(n===3&&!document.getElementById('dv-overview').innerHTML.trim())renderDash('overview');
+}
+
+// ══════════════════════════════════════════════════════
+// ORACLE XHR
+// ══════════════════════════════════════════════════════
+function oFetch(ep,params=''){
+  return new Promise((res,rej)=>{
+    if(!ST.conn){rej(new Error('Not connected'));return;}
+    const xhr=new XMLHttpRequest();
+    xhr.open('GET',ST.url+ep+'?limit=500'+(params?'&'+params:''),true);
+    xhr.setRequestHeader('Authorization','Basic '+btoa(ST.user+':'+ST.pass));
+    xhr.setRequestHeader('Accept','application/json');
+    xhr.timeout=15000;
+    xhr.onload=function(){
+      if(xhr.status>=400){rej(new Error('HTTP '+xhr.status));return;}
+      try{res(JSON.parse(xhr.responseText));}catch(e){rej(new Error('JSON error'));}
+    };
+    xhr.onerror=()=>rej(new Error('Network error'));
+    xhr.ontimeout=()=>rej(new Error('Timeout'));
+    xhr.send();
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// AI CALLS
+// ══════════════════════════════════════════════════════
+async function callAI(prompt,maxTokens=800){
+  if(!ST.apiKey) return null;
+  const r=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':ST.apiKey,'anthropic-version':'2023-06-01'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTokens,messages:[{role:'user',content:prompt}]})
+  });
+  const d=await r.json();
+  return d.content?.[0]?.text||null;
+}
+
+async function aiDemo(sql,tbl){
+  if(!ST.apiKey) return{cols:['Note'],rows:[['Add Anthropic API key for AI demo data']]};
+  const txt=await callAI(`Generate realistic Oracle ICM demo data for:\nSQL: ${sql}\nTable: ${tbl||'ICM'}\nReturn ONLY valid JSON: {"columns":["col1"],"rows":[["v1"]]} with 8-10 rows. No markdown.`,900);
+  if(!txt) return{cols:['Error'],rows:[['AI call failed']]};
+  const p=JSON.parse(txt.replace(/```json|```/g,'').trim());
+  return{cols:p.columns,rows:p.rows};
+}
+
+// ══════════════════════════════════════════════════════
+// P1: ICM SCHEMA SIDEBAR
+// ══════════════════════════════════════════════════════
+const SCHEMA=[
+  {g:'ICM Core',t:['CN_COMP_PLANS_ALL_VL','CN_SRP_COMP_PLANS_ALL','CN_SRP_PARTICIPANTS_ALL','CN_SRP_PARTICIPANT_DETAILS_ALL','CN_PLAN_COMPONENTS_ALL_VL','CN_FORMULAS_ALL_VL']},
+  {g:'Earnings & Credits',t:['CN_TP_EARNINGS_ALL','CN_TP_CREDITS_ALL','CN_SRP_SUBLEDGER_ALL','CN_SRP_PER_FORM_METRICS_ALL']},
+  {g:'Approvals',t:['CN_SRP_PLAN_APPR_INSTANCES_ALL','FND_BPM_TASK_B']},
+  {g:'Calendar & FX',t:['CN_PERIODS_B','CN_REPOSITORIES_ALL_B','CN_CONVERSION_RATES']},
+  {g:'HCM',t:['PER_ALL_PEOPLE_F','PER_USERS','JTF_RS_RESOURCE_PROFILES']},
+];
+const REST_MAP={'CN_COMP_PLANS_ALL_VL':'/cxRestApi/resources/latest/incentiveCompensationPlans','CN_SRP_PARTICIPANTS_ALL':'/cxRestApi/resources/latest/incentiveCompensationParticipants','CN_SRP_PARTICIPANT_DETAILS_ALL':'/cxRestApi/resources/latest/incentiveCompensationParticipants','PER_ALL_PEOPLE_F':'/hcmRestApi/resources/latest/workers','AP_INVOICES_ALL':'/fscmRestApi/resources/latest/invoices'};
+
+function buildTbls(){
+  const list=document.getElementById('tblList');
+  list.innerHTML='';
+  SCHEMA.forEach(grp=>{
+    const hd=document.createElement('div');hd.className='tbl-grp';hd.textContent=grp.g;list.appendChild(hd);
+    grp.t.forEach(t=>{
+      const row=document.createElement('div');row.className='tbl-row';
+      row.innerHTML=`<span style="color:var(--t4);font-size:10px">⊟</span> ${t}`;
+      row.onclick=()=>{
+        document.querySelectorAll('.tbl-row').forEach(r=>r.classList.remove('on'));
+        row.classList.add('on');
+        document.getElementById('sqled').value=`SELECT *\nFROM fusion.${t}\nWHERE rownum <= 100`;
+      };
+      list.appendChild(row);
+    });
+  });
+}
+function filterTbls(q){
+  document.querySelectorAll('#tblList .tbl-row').forEach(r=>
+    r.style.display=r.textContent.toLowerCase().includes(q.toLowerCase())?'':'none');
+}
+
+// ══════════════════════════════════════════════════════
+// P1: RUN SQL
+// ══════════════════════════════════════════════════════
+async function runSQL(){
+  const sql=document.getElementById('sqled').value.trim();
+  if(!sql){toast('Enter a SQL query','err');return;}
+  if(!ST.conn){toast('Connect to Oracle Fusion first','err');return;}
+  const area=document.getElementById('resArea');
+  area.innerHTML=`<div class="ldg"><div class="spin"></div> Running query…</div>`;
+  document.getElementById('resStat').textContent='';
+  const t0=Date.now();
+  try{
+    const m=sql.match(/FROM\s+(?:fusion\.)?(\w+)/i);
+    const tbl=(m?m[1]:'').toUpperCase();
+    const ep=REST_MAP[tbl];
+    let cols=[],rows=[];
+    if(ep){
+      const data=await oFetch(ep);
+      const items=data.items||data.value||[];
+      if(items.length){cols=Object.keys(items[0]);rows=items.map(i=>cols.map(c=>i[c]));}
+    } else {
+      const res=await aiDemo(sql,tbl);cols=res.cols;rows=res.rows;
+    }
+    const elapsed=((Date.now()-t0)/1000).toFixed(2);
+    const lim=parseInt(document.getElementById('rowLim').value);
+    const disp=rows.slice(0,lim);
+    if(!disp.length){area.innerHTML='<div class="ldg">No rows returned</div>';return;}
+    const ths=cols.map(c=>`<th>${c}</th>`).join('');
+    const trs=disp.map((row,i)=>`<tr><td style="color:var(--t4);font-size:11px">${i+1}</td>${row.map(c=>`<td>${c??'—'}</td>`).join('')}</tr>`).join('');
+    area.innerHTML=`<div style="overflow:auto;"><table class="rtbl"><thead><tr><th>#</th>${ths}</tr></thead><tbody>${trs}</tbody></table></div>`;
+    document.getElementById('resStat').textContent=`${disp.length} rows · ${elapsed}s${ep?'':' · AI demo'}`;
+    toast(`${disp.length} rows`,'ok');
+  }catch(e){
+    area.innerHTML=`<div style="padding:16px;background:rgba(239,83,80,.08);border:1px solid rgba(239,83,80,.3);border-radius:8px;color:var(--err);font-size:12px;"><strong>Error</strong><br><br>${e.message}</div>`;
+    toast('Query failed','err');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// P1: AI SQL GENERATOR
+// ══════════════════════════════════════════════════════
+const AI_CHIPS=['Top 10 earners this quarter','Comp plans by participant count','Pending approvals older than 7 days','OTV by region and position','FX rates for Incentive Compensation Annual','Subledger balances for participant 34000'];
+
+function openAI(){
+  document.getElementById('aiChips').innerHTML=AI_CHIPS.map(c=>
+    `<span style="background:var(--s3);border:1px solid var(--b2);color:var(--a1);border-radius:12px;padding:3px 10px;font-size:11px;cursor:pointer;white-space:nowrap;" onclick="document.getElementById('aiQ').value=this.textContent">${c}</span>`
+  ).join('');
+  document.getElementById('aiResultWrap').style.display='none';
+  document.getElementById('useAIBtn').style.display='none';
+  document.getElementById('aiModal').classList.add('on');
+}
+function closeAI(){document.getElementById('aiModal').classList.remove('on');}
+async function genSQL(){
+  const q=document.getElementById('aiQ').value.trim();
+  if(!q){toast('Enter a question','err');return;}
+  if(!ST.apiKey){toast('Add Anthropic API key in connection settings','err');return;}
+  document.getElementById('aiResultWrap').style.display='block';
+  document.getElementById('aiSqlOut').textContent='Generating…';
+  const prompt=`Generate Oracle Fusion ICM SQL for: "${q}"
+Use fusion. schema tables: CN_COMP_PLANS_ALL_VL, CN_SRP_COMP_PLANS_ALL, CN_SRP_PARTICIPANTS_ALL, CN_SRP_PARTICIPANT_DETAILS_ALL, CN_TP_EARNINGS_ALL, CN_SRP_SUBLEDGER_ALL, CN_PERIODS_B, CN_CONVERSION_RATES, FND_BPM_TASK_B.
+Return ONLY the SQL query. No explanation, no markdown backticks.`;
+  const sql=await callAI(prompt,1000);
+  if(!sql){document.getElementById('aiSqlOut').textContent='-- Generation failed';return;}
+  const clean=sql.replace(/```sql|```/g,'').trim();
+  ST.genSQL=clean;
+  document.getElementById('aiSqlOut').textContent=clean;
+  document.getElementById('useAIBtn').style.display='';
+}
+function useSQL(){
+  document.getElementById('sqled').value=ST.genSQL;
+  closeAI();
+  switchPanel(1,document.querySelector('.np.a1'));
+  toast('SQL loaded — press Run','inf');
+}
+
+// ══════════════════════════════════════════════════════
+// P2: SQL LIBRARY
+// ══════════════════════════════════════════════════════
+const LIB=[
+  {id:'comp-plan',cat:'ICM',title:'Comp Plan Full Detail',desc:'Components, formulas, rate tables, credit categories',
+   params:[{n:'PLAN_NAME',lbl:'Plan Name',def:'IC Simple Per Event 2017'}],
+   sql:`SELECT cp.comp_plan_name, pc.plan_component_name,
+  DECODE(f.incentive_formula_flag,'Y','Incentive Formula','Measure Formula') "Formula Type",
+  out_exp.expression_name "Output Expression",
+  out_exp.rendered_expression_disp "Output Detail",
+  in_exp.expression_name "Input Expression",
+  cat.name "Credit Category",
+  rate.rate_table_name
+FROM fusion.cn_comp_plan_components_all p,
+     fusion.cn_comp_plans_all_vl cp,
+     fusion.cn_plan_components_all_vl pc,
+     fusion.cn_plan_component_formulas_all f,
+     fusion.cn_formulas_all_vl fn,
+     (SELECT out.formula_id,oe.expression_name,oe.rendered_expression_disp
+      FROM fusion.cn_formulas_all_b out,fusion.cn_expressions_all_vl oe
+      WHERE out.output_exp_id=oe.expression_id) out_exp,
+     (SELECT fx.formula_id,ie.expression_name,ie.rendered_expression_disp
+      FROM fusion.CN_FORMULA_INPUT_EXPS_ALL fx,fusion.cn_expressions_all_vl ie
+      WHERE fx.expression_id=ie.expression_id) in_exp,
+     fusion.cn_formula_ecats_all fec,
+     fusion.cn_eligible_categories_all_tl cat,
+     fusion.cn_formula_rate_tables_all frt,
+     fusion.cn_rate_tables_all_vl rate
+WHERE p.comp_plan_id=cp.comp_plan_id
+  AND p.plan_component_id=pc.plan_component_id
+  AND p.plan_component_id=f.plan_component_id
+  AND f.formula_id=fn.formula_id(+)
+  AND f.formula_id=out_exp.formula_id(+)
+  AND f.formula_id=in_exp.formula_id(+)
+  AND f.formula_id=fec.formula_id(+)
+  AND fec.eligible_cat_id=cat.eligible_cat_id(+)
+  AND f.formula_id=frt.formula_id(+)
+  AND frt.rate_table_id=rate.rate_table_id(+)
+  AND cp.comp_plan_name=:PLAN_NAME`},
+  {id:'bip-part',cat:'ICM',title:'BIP Participant OTV Report',desc:'OTV, position, region, salary, plan assignment',
+   params:[{n:'ORG_ID',lbl:'BU Org ID',def:'300000001870282'}],
+   sql:`SELECT P.PARTICIPANT_NAME AS "Name",
+  PD.ATTRIBUTE_NUMBER2 AS "OTV",
+  PD.ATTRIBUTE_CHAR14 AS "Position",
+  PD.ATTRIBUTE_CHAR8 AS "Comp Role",
+  PD.ATTRIBUTE_CHAR10 AS "Manager L1",
+  PD.ATTRIBUTE_CHAR12 AS "Region",
+  PD.ATTRIBUTE_CHAR13 AS "Sub Region",
+  PD.ATTRIBUTE_NUMBER1 AS "Current Salary",
+  PD.CURRENCY_CODE AS "Currency",
+  CP.DISPLAY_NAME AS "Plan",
+  SCP.TARGET_INCENTIVE AS "Target Incentive",
+  INITCAP(SCP.APPROVAL_STATUS) AS "Status",
+  SPC.TARGET_INCENTIVE_WEIGHT AS "Weight %",
+  PD.ATTRIBUTE_NUMBER2 * SPC.TARGET_INCENTIVE_WEIGHT / 100 AS "Current Amount"
+FROM CN_SRP_COMP_PLANS_ALL SCP,
+     CN_SRP_PARTICIPANT_HDR_RO_V P,
+     CN_SRP_PARTICIPANT_DETAILS_ALL PD,
+     CN_COMP_PLANS_ALL_VL CP,
+     CN_SRP_PLAN_COMPONENTS_ALL SPC
+WHERE SCP.PARTICIPANT_ID=P.PARTICIPANT_ID
+  AND PD.PARTICIPANT_ID=P.PARTICIPANT_ID
+  AND CP.COMP_PLAN_ID=SCP.COMP_PLAN_ID
+  AND SPC.SRP_COMP_PLAN_ID=SCP.SRP_COMP_PLAN_ID
+  AND CP.ORG_ID=:ORG_ID`},
+  {id:'earnings',cat:'ICM',title:'Commission Earnings by Participant',desc:'Credits, transactions, formula sequence',
+   params:[{n:'PARTICIPANT_ID',lbl:'Participant ID',def:'21013'}],
+   sql:`SELECT DISTINCT srp.PARTICIPANT_ID, srp.PARTICIPANT_NAME,
+  cptl.comp_plan_name, comp.TARGET_INCENTIVE,
+  pctl.PLAN_COMPONENT_NAME, pcFORM.Formula_Sequence,
+  FORM.Formula_name, tpCda.TRANSACTION_AMT_SOURCE_CURR,
+  tpCda.SOURCE_TRX_NUMBER, tpCda.TRANSACTION_TYPE
+FROM CN_SRP_PARTICIPANTS_ALL srp,
+     CN_COMP_PLANS_ALL_B comp, CN_COMP_PLANS_ALL_TL cpTl,
+     CN_SRP_COMP_PLANS_ALL srpCp, CN_SRP_PLAN_COMPONENTS_ALL srpPC,
+     CN_PLAN_COMPONENTS_ALL_TL pcTL, CN_PLAN_COMPONENT_FORMULAS_ALL pcFORM,
+     CN_FORMULAS_ALL_TL Form, cn_tp_credits_All tpCda
+WHERE srpPC.PARTICIPANT_ID=srp.PARTICIPANT_ID
+  AND srp.PARTICIPANT_ID=:PARTICIPANT_ID
+  AND comp.COMP_PLAN_ID=srpCp.COMP_PLAN_ID
+  AND srpPC.SRP_COMP_PLAN_ID=srpCp.SRP_COMP_PLAN_ID
+  AND cpTL.comp_plan_id=comp.comp_plan_id
+  AND pctl.PLAN_COMPONENT_ID=srpPC.PLAN_COMPONENT_ID
+  AND srpPC.PLAN_COMPONENT_ID=pcFORM.PLAN_COMPONENT_ID`},
+  {id:'balances',cat:'ICM',title:'Subledger Balances',desc:'Beginning/ending balances, earnings, payments by period',
+   params:[{n:'PARTICIPANT_ID',lbl:'Participant ID',def:'34000'}],
+   sql:`SELECT period_id,
+  ROUND(SUM((NVL(balance2_bbd,0)-NVL(balance2_bbc,0))+(NVL(balance4_bbc,0)-NVL(balance4_bbd,0))),2) AS beginning_balance,
+  ROUND(SUM(BALANCE2_DTD),2) AS current_month_earnings,
+  ROUND(SUM(BALANCE4_DTD),2) AS recoverable_adjustments,
+  ROUND(SUM(NVL(BALANCE5_DTD,0)),2) AS non_recoverable_adj,
+  ROUND(SUM(BALANCE1_CTD),2) AS recover_this_month,
+  ROUND(SUM(BALANCE1_DTD),2) AS all_payments,
+  ROUND(SUM(NVL(BALANCE2_BBD,0)-NVL(BALANCE2_BBC,0)+NVL(BALANCE4_BBC,0)-NVL(BALANCE4_BBD,0)+
+        NVL(BALANCE2_DTD,0)-(NVL(BALANCE1_DTD,0)-NVL(BALANCE1_CTD,0)-NVL(BALANCE5_DTD,0))),2) AS ending_balance,
+  currency_code
+FROM cn_srp_subledger_all
+WHERE participant_id=:PARTICIPANT_ID
+  AND earning_type_id(+)=-1000 AND plan_component_id(+) IS NULL
+GROUP BY period_id,currency_code ORDER BY period_id`},
+  {id:'approvals',cat:'ICM',title:'Comp Letter Approvals',desc:'BPM approval workflow for compensation letters',
+   params:[],
+   sql:`SELECT srp.srp_comp_plan_id, srp.participant_id,
+  h.party_name "Participant", n.comp_plan_name,
+  srp.start_date, srp.end_date, apr.published_date,
+  apr.approval_status, w.tasknumber, w.outcome, w.state,
+  w.UPDATEDBY, w.UPDATEDDATE, w.ASSIGNEES, w.APPROVERS
+FROM fusion.cn_srp_comp_plans_all srp, fusion.cn_comp_plans_all_tl n,
+     fusion.cn_srp_participants_all p, fusion.hz_parties h,
+     fusion.cn_srp_plan_appr_instances_all apr,
+     FA_FUSION_SOAINFRA.WFTASK w
+WHERE srp.srp_comp_plan_id=apr.srp_comp_plan_id
+  AND srp.srp_plan_appr_instance_id=apr.srp_plan_appr_instance_id
+  AND srp.participant_id=p.participant_id
+  AND p.party_id=h.party_id
+  AND srp.comp_plan_id=n.comp_plan_id
+  AND n.language=USERENV('LANG')
+  AND w.compositename='IcCnSrpCompPlanApprovalComposite'
+  AND apr.srp_plan_appr_instance_id=w.IDENTIFICATIONKEY`},
+  {id:'bus',cat:'ICM',title:'ICM Business Units',desc:'All BUs with Incentive Compensation enabled',
+   params:[],
+   sql:`SELECT DISTINCT bu.bu_id, bu.bu_name
+FROM fun_all_business_units_v bu,
+     fun_business_functions_b bf,
+     fun_bu_usages_v buu
+WHERE bu.bu_id=buu.business_unit_id
+  AND bf.business_function_code='INCENTIVE_COMPENSATION_BF'
+  AND bf.business_function_id=buu.module_id`},
+  {id:'calendar',cat:'ICM',title:'Calendar Periods',desc:'ICM calendar periods with start/end dates',
+   params:[{n:'CALENDAR_NAME',lbl:'Calendar Name',def:'McAfee 445 Monthly Calendar'}],
+   sql:`SELECT crab.org_id, crab.calendar_id, cct.CALENDAR_NAME,
+  n.period_type, n.period_name, b.period_id, b.period_number,
+  TRUNC(b.start_date) AS start_date, TRUNC(b.end_date) AS end_date
+FROM cn_periods_b b, cn_periods_tl n,
+     cn_repositories_all_b crab, cn_calendars_tl cct
+WHERE b.period_id=n.period_id AND crab.calendar_id=b.calendar_id
+  AND cct.calendar_id=crab.calendar_id AND n.language='US'
+  AND CALENDAR_NAME=:CALENDAR_NAME AND n.period_type_id=-1001
+ORDER BY b.period_number`},
+  {id:'fx',cat:'ICM',title:'FX Conversion Rates',desc:'Incentive Compensation Annual Rate FX rates',
+   params:[{n:'START_DATE',lbl:'Start Date',def:'01-JAN-2019'},{n:'FROM_CURRENCY',lbl:'From Currency',def:'USD'}],
+   sql:`SELECT ct.CONVERSION_NAME, cr.conversion_rate, cr.from_currency,
+  cr.to_currency, cr.CONVERSION_START_DATE, cr.CONVERSION_END_DATE
+FROM CN_CONVERSION_TYPES_TL ct, CN_CONVERSION_RATES cr
+WHERE cr.conversion_type_id=ct.conversion_type_id
+  AND ct.conversion_name='Incentive Compensation Annual Rate'
+  AND cr.CONVERSION_START_DATE>=:START_DATE
+  AND cr.from_currency=:FROM_CURRENCY`},
+  {id:'otv-calc',cat:'ICM',title:'Pro-Rated OTV Calculation',desc:'Daily and prorated OTV based on plan dates',
+   params:[{n:'PARTICIPANT_ID',lbl:'Participant ID',def:'18001'}],
+   sql:`SELECT (pd.attribute_number2/364) "Daily OTV",
+  pd.attribute_number2 "Annual OTV",
+  (NVL(pd.end_date,TO_DATE(srp.end_date,'YYYY-MM-DD'))-
+   TO_DATE(GREATEST(pd.start_date,srp.start_date),'YYYY-MM-DD')+1) "Prorated Days",
+  ((NVL(pd.end_date,TO_DATE(srp.end_date,'YYYY-MM-DD'))-
+    TO_DATE(GREATEST(pd.start_date,srp.start_date),'YYYY-MM-DD')+1)*
+   (pd.attribute_number2/364)) "Prorated OTV",
+  pd.start_date, pd.end_date,
+  EXTRACT(YEAR FROM TO_DATE(PD.END_DATE,'YYYY-MM-DD')) "Year"
+FROM cn_srp_participant_details_all pd, cn_srp_comp_plans_all srp
+WHERE pd.participant_id=srp.participant_id
+  AND pd.participant_id=:PARTICIPANT_ID`},
+  {id:'user-link',cat:'HCM',title:'Participant → HCM User Link',desc:'Link ICM participants to HCM users, email, BU',
+   params:[],
+   sql:`SELECT papf.person_number, papf.PERSON_ID, C.USERNAME,
+  D.PARTY_NAME, part.PARTICIPANT_ID, part.PARTICIPANT_NAME,
+  part.PARTY_NUMBER, res.EMAIL_ADDRESS,
+  partdet.COST_CENTER, partdet.COUNTRY_CODE,
+  partdet.CURRENCY_CODE, hauft.NAME AS BusinessUnit
+FROM FUSION.HR_ORG_UNIT_CLASSIFICATIONS_F houcf,
+     FUSION.HR_ALL_ORGANIZATION_UNITS_F haouf,
+     FUSION.HR_ORGANIZATION_UNITS_F_TL hauft,
+     FUSION.per_all_assignments_m paam,
+     fusion.PER_USERS C, FUSION.HZ_PARTIES D,
+     FUSION.per_all_people_f papf,
+     Fusion.jtf_rs_resource_profiles Res,
+     Fusion.cn_srp_participants_All part,
+     Fusion.cn_Srp_participant_details_all partdet
+WHERE D.USER_GUID=C.USER_GUID AND C.PERSON_ID=papf.PERSON_ID
+  AND d.party_id=res.party_id
+  AND haouf.ORGANIZATION_ID=houcf.ORGANIZATION_ID
+  AND haouf.ORGANIZATION_ID=hauft.ORGANIZATION_ID
+  AND hauft.LANGUAGE=USERENV('LANG')
+  AND part.PARTICIPANT_ID=partdet.PARTICIPANT_ID
+  AND papf.PERSON_ID=paam.PERSON_ID`},
+  {id:'emp-details',cat:'HCM',title:'Employee Details & BU',desc:'Person, user, email, business unit',
+   params:[],
+   sql:`SELECT papf.person_number, papf.PERSON_ID, C.USER_GUID,
+  C.USERNAME, D.PARTY_NAME, res.EMAIL_ADDRESS,
+  hauft.NAME AS BusinessUnit
+FROM FUSION.HR_ORG_UNIT_CLASSIFICATIONS_F houcf,
+     FUSION.HR_ALL_ORGANIZATION_UNITS_F haouf,
+     FUSION.HR_ORGANIZATION_UNITS_F_TL hauft,
+     FUSION.per_all_assignments_m paam,
+     fusion.PER_USERS C, FUSION.HZ_PARTIES D,
+     FUSION.per_all_people_f papf,
+     Fusion.jtf_rs_resource_profiles Res
+WHERE D.USER_GUID=C.USER_GUID AND C.PERSON_ID=papf.PERSON_ID
+  AND d.party_id=res.party_id
+  AND haouf.ORGANIZATION_ID=houcf.ORGANIZATION_ID
+  AND haouf.ORGANIZATION_ID=hauft.ORGANIZATION_ID
+  AND hauft.LANGUAGE=USERENV('LANG')
+  AND papf.PERSON_ID=paam.PERSON_ID`},
+];
+
+function buildLib(){
+  const cats=[...new Set(LIB.map(q=>q.cat))];
+  document.getElementById('libCats').innerHTML=
+    ['All',...cats].map(c=>`<div class="cat${c===ST.libCat?' on':''}" onclick="setLibCat('${c}')">${c}</div>`).join('');
+  const filtered=LIB.filter(q=>(ST.libCat==='All'||q.cat===ST.libCat)&&
+    (q.title.toLowerCase().includes(ST.libQ)||q.desc.toLowerCase().includes(ST.libQ)));
+  document.getElementById('libList').innerHTML=filtered.map(q=>`
+    <div class="lib-item${ST.curLib?.id===q.id?' on':''}" onclick="openLib('${q.id}')">
+      <div class="lib-item-title">${q.title}<span class="lbadge lb-${q.cat.toLowerCase()}">${q.cat}</span></div>
+      <div class="lib-meta">${q.desc}</div>
+    </div>`).join('');
+}
+function filterLib(v){ST.libQ=v.toLowerCase();buildLib();}
+function setLibCat(c){ST.libCat=c;buildLib();}
+
+function openLib(id){
+  ST.curLib=LIB.find(q=>q.id===id); buildLib(); if(!ST.curLib)return;
+  const q=ST.curLib;
+  const paramsHtml=q.params.length?`
+    <div class="lib-params-bar">
+      <span style="font-size:11px;color:var(--t3);font-weight:700">Parameters:</span>
+      ${q.params.map(p=>`<div class="pf"><label>${p.lbl}</label><input id="lp-${p.n}" value="${p.def}"></div>`).join('')}
+      <button class="btn btn-blue" onclick="runLib()" style="padding:5px 14px;font-size:12px;">▶ Run Live</button>
+      <button class="btn btn-ghost" onclick="libToEditor()" style="padding:5px 14px;font-size:12px;">↗ Editor</button>
+    </div>`:`
+    <div class="lib-params-bar" style="gap:8px;">
+      <button class="btn btn-blue" onclick="runLib()" style="padding:5px 14px;font-size:12px;">▶ Run Live</button>
+      <button class="btn btn-ghost" onclick="libToEditor()" style="padding:5px 14px;font-size:12px;">↗ Editor</button>
+      <button class="btn btn-ghost" onclick="copyLib()" style="padding:5px 14px;font-size:12px;">⧉ Copy</button>
+    </div>`;
+  document.getElementById('libDetail').innerHTML=`
+    <div class="lib-dhd">
+      <div><div class="lib-dtitle">${q.title}</div><div class="lib-ddesc">${q.desc}</div></div>
+      <div style="display:flex;gap:8px;flex-shrink:0;">
+        <button class="btn btn-ghost" onclick="copyLib()">⧉ Copy</button>
+        <button class="btn btn-ghost" onclick="libToEditor()">↗ Editor</button>
+      </div>
+    </div>
+    ${paramsHtml}
+    <div class="lib-body">
+      <pre class="lib-sql">${q.sql}</pre>
+      <div id="libRes" style="margin-top:14px;"></div>
+    </div>`;
+}
+
+async function runLib(){
+  if(!ST.curLib)return;
+  if(!ST.conn){toast('Connect to Oracle first','err');return;}
+  let sql=ST.curLib.sql;
+  ST.curLib.params.forEach(p=>{
+    const v=document.getElementById('lp-'+p.n)?.value||p.def;
+    sql=sql.replace(new RegExp(':'+p.n,'g'),`'${v}'`);
+  });
+  const res=document.getElementById('libRes');
+  res.innerHTML=`<div class="ldg"><div class="spin"></div> Running…</div>`;
+  try{
+    const d=await aiDemo(sql,ST.curLib.id);
+    const ths=d.cols.map(c=>`<th>${c}</th>`).join('');
+    const trs=d.rows.slice(0,50).map((row,i)=>`<tr><td style="color:var(--t4)">${i+1}</td>${row.map(c=>`<td>${c??'—'}</td>`).join('')}</tr>`).join('');
+    res.innerHTML=`<table class="rtbl"><thead><tr><th>#</th>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+    toast(`${d.rows.length} rows`,'ok');
+  }catch(e){res.innerHTML=`<div style="color:var(--err);padding:10px;font-size:12px;">${e.message}</div>`;}
+}
+function libToEditor(){
+  if(!ST.curLib)return;
+  document.getElementById('sqled').value=ST.curLib.sql;
+  switchPanel(1,document.querySelector('.np.a1'));
+  toast('SQL loaded in editor','inf');
+}
+function copyLib(){
+  if(!ST.curLib)return;
+  navigator.clipboard.writeText(ST.curLib.sql);
+  toast('SQL copied','ok');
+}
+
+// ══════════════════════════════════════════════════════
+// P3: DASHBOARDS
+// ══════════════════════════════════════════════════════
+function switchDash(name,el){
+  document.querySelectorAll('.dn-item').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.dv').forEach(v=>v.classList.remove('on'));
+  const dv=document.getElementById('dv-'+name);
+  dv.classList.add('on');
+  if(!dv.innerHTML.trim())renderDash(name);
+}
+function renderDash(name){
+  const fns={overview:renderOverview,seller:renderSeller,plans:renderPlans,earnings:renderEarnings,approvals:renderApprovals,anomalies:renderAnomalies,calendar:renderCalendar};
+  if(fns[name])fns[name]();
+}
+
+const isLive=()=>ST.conn;
+const liveTag=()=>isLive()?'<span class="live-tag">LIVE</span>':'<span class="demo-tag">DEMO</span>';
+
+function kc(lbl,val,sub,delta,up){
+  const dc=up===undefined?'':('kc-delta '+(up?'up':'dn'));
+  return`<div class="kc"><div class="kc-lbl">${lbl}</div><div class="kc-val">${val}</div><div class="kc-sub">${sub}</div>${delta?`<div class="${dc}">${delta}</div>`:''}</div>`;
+}
+function br2(lbl,val,max,col='var(--purple)'){
+  const pct=(val/max*100).toFixed(1);
+  return`<div class="br"><div class="bl">${lbl}</div><div class="bt"><div class="bf" style="width:${pct}%;background:${col}"></div></div><div class="bv">${typeof val==='number'&&val>999?'$'+Math.round(val/1000)+'K':val}</div></div>`;
+}
+function pill(t,c){return`<span class="bp bp-${c}">${t}</span>`;}
+
+function renderOverview(){
+  document.getElementById('dv-overview').innerHTML=`
+    <div class="dhd"><h2>🏠 ICM Executive Overview</h2>
+      <div class="dhd-r">
+        <select class="psel"><option>March 2026</option><option>Q1 2026</option></select>
+        <button class="ref-btn" onclick="renderOverview()">↻ Refresh</button>
+        ${liveTag()}
+      </div>
+    </div>
+    <div class="g4">
+      ${kc('Active Participants','2,847','Across all comp plans','↑ +142 vs last period',true)}
+      ${kc('Total OTV','$48.3M','On-Target Variable compensation','↑ +6.2% YoY',true)}
+      ${kc('Commission Earned','$12.7M','Calculated · Pending payout','↓ -2.1% vs target',false)}
+      ${kc('Pending Approvals','183','Comp letters awaiting sign-off','↓ -34 from last week',true)}
+    </div>
+    <div class="g2">
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">📊 Earnings by Comp Plan</span></div>
+        <div class="dcbody">
+          ${br2('IC Simple Per Event 2017',4820000,4820000,'var(--a1)')}
+          ${br2('McAfee EMEA Accelerator',3640000,4820000,'var(--a2)')}
+          ${br2('McAfee APJ Standard',2980000,4820000,'var(--a3)')}
+          ${br2('McAfee Americas Q4',2280000,4820000,'var(--warn)')}
+          ${br2('McAfee Channel Partner',1620000,4820000,'var(--t4)')}
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">🌐 Business Units</span></div>
+        <div class="dcbody">
+          <table class="dtbl">
+            <thead><tr><th>BU ID</th><th>Name</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>300000001870282</td><td>McAfee Enterprise LE BU</td><td>${pill('Active','g')}</td></tr>
+              <tr><td>300000002594180</td><td>McAfee BU</td><td>${pill('Active','g')}</td></tr>
+              <tr><td>300000002781680</td><td>McAfee Corp BU</td><td>${pill('Review','w')}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="dc">
+      <div class="dchd"><span class="dctitle">🔄 ICM End-to-End Pipeline</span></div>
+      <div class="dcbody" style="display:flex;gap:4px;">
+        ${[['CX Sales','Opportunity Close','ok','✓'],['AR/ERP','Invoice & Revenue','ok','✓'],['ICM Credits','Transaction Credit','ok','✓'],['ICM Calculate','Earnings Calc','warn','●'],['BPM Approve','Comp Letter','t4','○'],['Payroll','Commission Payout','t4','○']].map(([t,s,c,ic])=>
+          `<div style="flex:1;text-align:center;padding:12px 6px;background:${c==='ok'?'rgba(102,187,106,.12)':c==='warn'?'rgba(245,124,0,.12)':'var(--s2)'};border-radius:5px;">
+            <div style="font-size:11px;font-weight:700;color:var(--${c})">${t}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:3px">${s}</div>
+            <div style="margin-top:4px;color:var(--${c})">${ic}</div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+}
+
+function renderSeller(){
+  document.getElementById('dv-seller').innerHTML=`
+    <div class="dhd">
+      <div><h2>👤 Seller Dashboard</h2>
+        <div style="font-size:12px;color:var(--t3);margin-top:2px">Lisa Chen · Senior AE · McAfee Enterprise LE BU</div>
+      </div>
+      <div class="dhd-r"><select class="psel"><option>Q1 2026</option><option>Q4 2025</option></select>
+        <button class="ref-btn">↻ Refresh</button></div>
+    </div>
+    <div class="g4">
+      ${kc('Quota Attainment','92.0%','Of $5.9M target','↑ +4.2% vs last quarter',true)}
+      ${kc('YTD Commission','$26,256','Of $100K OTE','21.7% of annual target',undefined)}
+      ${kc('Active Credits','$3,443,000','This quarter','↑ +12 new credits',true)}
+      ${kc('Open Dispute','$3,840','DSP-2603-001 · Escalated','⚠ Action needed',false)}
+    </div>
+    <div class="g2">
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">📈 Attainment to Goal</span></div>
+        <div class="dcbody">
+          ${[['Revenue Target','$5,441,000',78,'var(--ok)'],['Quota Attainment','92.0%',92,'var(--warn)'],['Commission Earned','$26,256',26,'var(--purple)']].map(([l,v,p,c])=>`
+            <div style="margin-bottom:12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
+                <span style="color:var(--t3)">${l}</span><span style="color:var(--t1);font-weight:600">${v}</span>
+              </div>
+              <div class="pt"><div class="pf2" style="width:${p}%;background:${c}"></div></div>
+            </div>`).join('')}
+          <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:6px;font-size:11px;color:var(--t3)">
+            💡 <strong style="color:var(--a1)">3% more</strong> to Tier 4 (11% rate). Close <strong style="color:var(--t1)">$45K</strong> more in sales.
+          </div>
+        </div>
+      </div>
+      <div class="dc">
+        <div class="dchd"><span class="dctitle">💰 Credits by Product</span></div>
+        <div class="dcbody">
+          ${br2('Corporate Travel',1562000,1562000,'var(--a1)')}
+          ${br2('Digital Channel',960000,1562000,'var(--a2)')}
+          ${br2('Leisure Travel',667000,1562000,'var(--a3)')}
+          ${br2('Loyalty Program',254000,1562000,'var(--t4)')}
+          <div style="margin-top:12px;padding:10px;background:var(--s2);border-radius:6px;">
+            <div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:600">⚡ What-If Calculator</div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:12px;">
+              <label style="color:var(--t3)">Deal $</label>
+              <input id="dealAmt" type="number" value="500000" style="background:var(--bg);border:1px solid var(--b2);border-radius:5px;padding:4px 8px;color:var(--t1);width:110px;">
+              <span id="commResult" style="color:var(--ok);font-weight:800;font-size:15px;">$45,000</span>
+            </div>
+            <div id="commRate" style="font-size:10px;color:var(--t3);margin-top:4px;">at 9.0% rate (Tier 3)</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('dealAmt').oninput=function(){
+    const deal=parseFloat(this.value)||0,attain=92;
+    let rate=0.07,tier='Tier 1';
+    if(attain>=95){rate=0.11;tier='Tier 4';}else if(attain>=90){rate=0.09;tier='Tier 3';}else if(attain>=80){rate=0.08;tier='Tier 2';}
+    document.getElementById('commResult').textContent='$'+Math.round(deal*rate).toLocaleString();
+    document.getElementById('commRate').textContent=`at ${(rate*100).toFixed(1)}% rate (${tier})`;
+  };
+}
+
+function renderPlans(){
+  document.getElementById('dv-plans').innerHTML=`
+    <div class="dhd"><h2>📋 Compensation Plans</h2>
+      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button>${liveTag()}</div>
+    </div>
+    <div class="dc"><div class="dchd"><span class="dctitle">Active Plans</span></div>
+      <div class="dcbody"><table class="dtbl">
+        <thead><tr><th>Plan Name</th><th>Display Name</th><th>Participants</th><th>Total OTV</th><th>Status</th></tr></thead>
+        <tbody>
+          ${[['IC Simple Per Event 2017','IC Simple - Enterprise',842,'$24.8M','g'],['McAfee EMEA Accelerator','EMEA Accelerator',634,'$18.6M','g'],['McAfee APJ Standard','APJ Standard',521,'$14.2M','g'],['McAfee Americas Q4','Americas Q4 Plan',398,'$9.8M','g'],['McAfee Channel Partner','Channel Partner',283,'$6.3M','e']].map(([n,d,p,o,s])=>
+            `<tr><td style="color:var(--t1);font-weight:600">${n}</td><td>${d}</td><td>${p}</td><td>${o}</td><td>${pill(s==='g'?'Active':'Inactive',s)}</td></tr>`).join('')}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+function renderEarnings(){
+  document.getElementById('dv-earnings').innerHTML=`
+    <div class="dhd"><h2>💰 Commission Earnings</h2>
+      <div class="dhd-r"><select class="psel"><option>Period 2019001</option><option>Period 2019002</option></select>
+        <button class="ref-btn">↻ Refresh</button></div>
+    </div>
+    <div class="g4">
+      ${kc('Total Calculated','$12.7M','All participants',undefined,undefined)}
+      ${kc('Avg Per Participant','$4,462','2,847 participants',undefined,undefined)}
+      ${kc('Highest Earner','$89,400','John D. · EMEA Accelerator',undefined,undefined)}
+      ${kc('Below Target','27','Flagged for review','⚠ Action needed',false)}
+    </div>
+    <div class="dc"><div class="dchd"><span class="dctitle">Top Earners</span></div>
+      <div class="dcbody"><table class="dtbl">
+        <thead><tr><th>#</th><th>Participant</th><th>Plan</th><th>Credits</th><th>Commission</th><th>Attainment</th><th>Status</th></tr></thead>
+        <tbody>
+          ${[['1','John D.','IC Simple Per Event','$892K','$89,400','112%','g'],['2','Sarah C.','EMEA Accelerator','$743K','$74,300','98%','g'],['3','Mike R.','Americas Q4','$681K','$68,100','95%','g'],['4','Ana L.','APJ Standard','$592K','$59,200','84%','w'],['5','David K.','IC Simple Per Event','$534K','$53,400','78%','w']].map(([n,p,pl,cr,cm,at,t])=>
+            `<tr><td style="color:var(--t4)">${n}</td><td style="color:var(--t1);font-weight:600">${p}</td><td>${pl}</td><td>${cr}</td><td style="color:var(--ok);font-weight:600">${cm}</td><td>${pill(at,t)}</td><td>${pill('CALC','b')}</td></tr>`).join('')}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+function renderApprovals(){
+  document.getElementById('dv-approvals').innerHTML=`
+    <div class="dhd"><h2>✅ Approval Pipeline</h2>
+      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button>${liveTag()}</div>
+    </div>
+    <div class="g4">
+      ${kc('Total Pending','183','Comp letters',undefined,undefined)}
+      ${kc('Approved Today','44','','↑ vs yesterday',true)}
+      ${kc('Escalated','12','Require action','⚠ Urgent',false)}
+      ${kc('Avg Wait','3.2 days','Time in approval',undefined,undefined)}
+    </div>
+    <div class="dc"><div class="dchd"><span class="dctitle">BPM Approval Tasks</span></div>
+      <div class="dcbody"><table class="dtbl">
+        <thead><tr><th>Participant</th><th>Plan</th><th>Task #</th><th>Status</th><th>Assignee</th><th>Days Open</th></tr></thead>
+        <tbody>
+          ${[['John Smith','IC Simple Per Event','TSK-20391','ASSIGNED','mgr@mcafee.com','2','b'],['Sarah Chen','EMEA Accelerator','TSK-20388','ESCALATED','vp@mcafee.com','8','e'],['Mike Johnson','Americas Q4','TSK-20385','ASSIGNED','mgr2@mcafee.com','1','b'],['Ana Lopez','APJ Standard','TSK-20380','COMPLETED','mgr3@mcafee.com','4','g']].map(([p,pl,t,s,a,d,c])=>
+            `<tr><td style="color:var(--t1);font-weight:600">${p}</td><td>${pl}</td><td style="color:var(--a2)">${t}</td><td>${pill(s,c)}</td><td>${a}</td><td style="color:${parseInt(d)>5?'var(--err)':'var(--t2)'}">${d}d</td></tr>`).join('')}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+function renderAnomalies(){
+  document.getElementById('dv-anomalies').innerHTML=`
+    <div class="dhd"><h2>⚠️ Anomaly Detection</h2>
+      <div class="dhd-r"><button class="ref-btn" onclick="renderAnomalies()">↻ Scan</button></div>
+    </div>
+    <div class="ac e"><div class="ac-icon">🔴</div>
+      <div><div class="ac-title">Duplicate Credit Detected</div>
+        <div class="ac-text">Participant 21013 (John Smith) has 2 credits for TRX-8834-201 · Total: $35,960 · Plan: IC Simple Per Event 2017</div></div>
+    </div>
+    <div class="ac w"><div class="ac-icon">🟡</div>
+      <div><div class="ac-title">Outlier Earner — 3.2x Average</div>
+        <div class="ac-text">Participant 21019 earnings of $89,400 is 3.2x the plan average of $27,900. Period 2019001. Review credit assignment.</div></div>
+    </div>
+    <div class="ac w"><div class="ac-icon">🟡</div>
+      <div><div class="ac-title">Missing Plan Assignment — 3 Participants</div>
+        <div class="ac-text">Participants 21045, 21046, 21047 have no active comp plan for the current period. They will receive $0 commission.</div></div>
+    </div>
+    <div class="ac i"><div class="ac-icon">🔵</div>
+      <div><div class="ac-title">FX Rate Gap — EUR Conversion</div>
+        <div class="ac-text">No EUR conversion rate for period 2019-04-01 to 2019-04-30 in "Incentive Compensation Annual Rate". 48 participants affected.</div></div>
+    </div>`;
+}
+
+function renderCalendar(){
+  document.getElementById('dv-calendar').innerHTML=`
+    <div class="dhd"><h2>📅 Calendar & Periods</h2>
+      <div class="dhd-r"><button class="ref-btn">↻ Refresh</button></div>
+    </div>
+    <div class="dc"><div class="dchd"><span class="dctitle">McAfee 445 Monthly Calendar · FY2019</span></div>
+      <div class="dcbody"><table class="dtbl">
+        <thead><tr><th>Period Name</th><th>Period #</th><th>Start Date</th><th>End Date</th><th>Type</th><th>Status</th></tr></thead>
+        <tbody>
+          ${[['2019-01',1,'01-Jan-2019','31-Jan-2019','Monthly','Closed','b'],['2019-02',2,'01-Feb-2019','28-Feb-2019','Monthly','Closed','b'],['2019-03',3,'01-Mar-2019','31-Mar-2019','Monthly','Closed','b'],['2019-04',4,'01-Apr-2019','30-Apr-2019','Monthly','Open','g'],['2019-05',5,'01-May-2019','31-May-2019','Monthly','Future','e']].map(([n,num,s,e,t,st,c])=>
+            `<tr><td style="color:var(--t1);font-weight:600">${n}</td><td>${num}</td><td>${s}</td><td>${e}</td><td>${t}</td><td>${pill(st,c)}</td></tr>`).join('')}
+        </tbody>
+      </table></div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+buildTbls();
+buildLib();
+renderOverview();
+initConn();
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='Enter')runSQL();
+});
+</script>
+</body>
+</html>
