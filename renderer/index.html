@@ -1078,39 +1078,6 @@ function copyLib(){
 // ══════════════════════════════════════════════════════
 
 
-
-const isLive=()=>ST.conn;
-const liveTag=()=>isLive()?'<span class="live-tag">LIVE</span>':'<span class="demo-tag">DEMO</span>';
-
-function kc(lbl,val,sub,delta,up){
-  const dc=up===undefined?'':('kc-delta '+(up?'up':'dn'));
-  return`<div class="kc"><div class="kc-lbl">${lbl}</div><div class="kc-val">${val}</div><div class="kc-sub">${sub}</div>${delta?`<div class="${dc}">${delta}</div>`:''}</div>`;
-}
-function br2(lbl,val,max,col='var(--purple)'){
-  const pct=(val/max*100).toFixed(1);
-  return`<div class="br"><div class="bl">${lbl}</div><div class="bt"><div class="bf" style="width:${pct}%;background:${col}"></div></div><div class="bv">${typeof val==='number'&&val>999?'$'+Math.round(val/1000)+'K':val}</div></div>`;
-}
-function pill(t,c){return`<span class="bp bp-${c}">${t}</span>`;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ══════════════════════════════════════════════════════
-// INIT
-document.addEventListener('keydown',e=>{
-  if((e.metaKey||e.ctrlKey)&&e.key==='Enter')window.runSQL();
-});
 // ── DRAG RESIZE ─────────────────────────────────────────────────────────
 (function(){
   const dragger = document.getElementById('dragger');
@@ -2639,6 +2606,7 @@ initConn();
 updateLnums();
 buildHistory();
 renderOverview();
+
 
 </script>
 </body>
